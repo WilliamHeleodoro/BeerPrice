@@ -8,12 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Easy.Automation" Version="1.0.0.12" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="110.0.5481.7700" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Dados\Dados.csproj" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Npgsql" Version="7.0.2" />
   </ItemGroup>
 
 </Project>

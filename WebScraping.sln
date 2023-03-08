@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScraping", "WebScraping\WebScraping.csproj", "{0AB45FF3-AAC7-4C4D-A40C-18A56E967FF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebScraping", "WebScraping\WebScraping.csproj", "{0AB45FF3-AAC7-4C4D-A40C-18A56E967FF9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraping", "Scraping", "{148A23BE-8639-4692-ABFB-4BAA9F8DB49F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Conexao", "Conexao", "{297E1E3B-8852-4117-BA7B-BB10389A754F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dados", "Dados\Dados.csproj", "{4CB02320-8B64-421E-933F-F15865B9FF3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +21,17 @@ Global
 		{0AB45FF3-AAC7-4C4D-A40C-18A56E967FF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AB45FF3-AAC7-4C4D-A40C-18A56E967FF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AB45FF3-AAC7-4C4D-A40C-18A56E967FF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CB02320-8B64-421E-933F-F15865B9FF3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CB02320-8B64-421E-933F-F15865B9FF3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CB02320-8B64-421E-933F-F15865B9FF3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CB02320-8B64-421E-933F-F15865B9FF3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0AB45FF3-AAC7-4C4D-A40C-18A56E967FF9} = {148A23BE-8639-4692-ABFB-4BAA9F8DB49F}
+		{4CB02320-8B64-421E-933F-F15865B9FF3E} = {297E1E3B-8852-4117-BA7B-BB10389A754F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {437C30A2-BD32-4D35-8976-FF0CD9EB6254}

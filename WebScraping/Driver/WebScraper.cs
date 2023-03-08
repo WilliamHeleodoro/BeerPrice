@@ -1,4 +1,6 @@
-﻿using EasyAutomationFramework;
+﻿using Dados;
+using EasyAutomationFramework;
+using javax.swing;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
@@ -14,12 +16,11 @@ namespace WebScraping.Driver
 {
     public class WebScraper : Web
     {
+        List<Item> items = new List<Item>();
         public string GetDate(string link)
         {
             if(driver == null)
                 StartBrowser();
-
-            var items = new List<Item>();
 
             Navigate(link);
 
@@ -28,7 +29,7 @@ namespace WebScraping.Driver
             Regex montarQuantidade = new Regex(@"\d+(Un|Unidade|Unidades|unidade|unidades)");
             Regex montarQuantidades = new Regex(@"\d+");
 
-            string[] marcasCerveja = { "skol", "heineken", "amstel", "dalla","big john", "brahma" };
+            string[] marcasCerveja = { "skol", "heineken", "amstel", "dalla","big john", "brahma", "antarctica" };
 
             var texto = "";
 
@@ -42,7 +43,7 @@ namespace WebScraping.Driver
                 item.Mercado = "Moura";
                 //AJUSTAR PREÇO
                 Match preco = montarPreco.Match(element.FindElement(By.ClassName("area-bloco-preco")).Text);
-                item.Preco = Convert.ToString(preco.Value);
+                item.Preco = Convert.ToDecimal(preco.Value);
 
                 //AJUSTAR TITULO
                 item.Titulo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
@@ -55,9 +56,9 @@ namespace WebScraping.Driver
                 Match  quantidade  = montarQuantidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
                 Match quantidades = montarQuantidades.Match(quantidade.Value); 
                 if (quantidades.Value == "")
-                    item.Quantidade = "1";
+                    item.Quantidade = 1;
                 else
-                    item.Quantidade = Convert.ToString(quantidades.Value);
+                    item.Quantidade = Convert.ToInt32(quantidades.Value);
 
                 //AJUSTAR MARCA
                 string marca = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
@@ -69,35 +70,28 @@ namespace WebScraping.Driver
 
                 items.Add(item);
 
-              
             }
-            
-                return texto;
+
+            inserirItem();
+            return texto;
 
         }
 
-        public void gerarString(string texto)
+        public void inserirItem()
         {
-            string[] itens = texto.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string item in itens)
+            Repositorio repositorio = new Repositorio();
+            foreach (var item in items)
             {
-                // Extrair o preço
-                string padraoPreco = @"R\$ ([\d,]+) ";
-                Match matchPreco = Regex.Match(item, padraoPreco);
-                string preco = matchPreco.Groups[1].Value;
+                if(repositorio.ItemExiste(item.Mercado, item.Marca, item.Unidade, item.Quantidade))
+                {
+                    repositorio.AtualizarItem(item.Mercado, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade);
+                    continue;
+                }
 
-                // Extrair o título e a marca
-                string tituloMarca = item.Replace(matchPreco.Value, "").Trim();
-                string[] partesTituloMarca = tituloMarca.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-
-                string marca = partesTituloMarca[0];
-                string titulo = string.Join(" ", partesTituloMarca, 1, partesTituloMarca.Length - 1);
-
-                Console.WriteLine("Título: " + titulo);
-                Console.WriteLine("Marca: " + marca);
-                Console.WriteLine("Preço: " + preco);
+                repositorio.InserirItem(item.Mercado, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade);
             }
-         }
+
+        }
+
     }
 }
