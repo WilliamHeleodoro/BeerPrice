@@ -8,6 +8,8 @@ namespace WebScraping.Model
 {
     public class Item
     {
+        public string Mercado { get; set; } = "";
+        public string Marca { get; set; } = "";
         public string Titulo { get; set; } = "";
         public string Preco { get; set; } = "";
         public string Unidade { get; set; } = "";

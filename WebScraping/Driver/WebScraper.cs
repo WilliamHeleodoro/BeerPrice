@@ -26,7 +26,10 @@ namespace WebScraping.Driver
             Regex montarPreco = new Regex(@"\d+(,\d{1,2})?");
             Regex montarUnidade = new Regex(@"\d+([,.]\d+)?(L|l|ml|Ml|ML)");
             Regex montarQuantidade = new Regex(@"\d+(Un|Unidade|Unidades|unidade|unidades)");
-            
+            Regex montarQuantidades = new Regex(@"\d+");
+
+            string[] marcasCerveja = { "skol", "heineken", "amstel", "dalla","big john", "brahma" };
+
             var texto = "";
 
 
@@ -36,16 +39,33 @@ namespace WebScraping.Driver
             foreach(var element in elements)
             {
                 var item = new Item();
+                item.Mercado = "Moura";
+                //AJUSTAR PREÇO
                 Match preco = montarPreco.Match(element.FindElement(By.ClassName("area-bloco-preco")).Text);
-                item.Preco = Convert.ToString(preco);
+                item.Preco = Convert.ToString(preco.Value);
 
+                //AJUSTAR TITULO
                 item.Titulo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
 
+                //AJUSTAR UNIDADE
                 Match unidade = montarUnidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
-                item.Unidade = Convert.ToString(unidade);
+                item.Unidade = Convert.ToString(unidade.Value);
 
-                Match quantidade = montarQuantidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
-                item.Quantidade = Convert.ToString(quantidade);
+                //AJUSTAR QUANTIDADE
+                Match  quantidade  = montarQuantidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
+                Match quantidades = montarQuantidades.Match(quantidade.Value); 
+                if (quantidades.Value == "")
+                    item.Quantidade = "1";
+                else
+                    item.Quantidade = Convert.ToString(quantidades.Value);
+
+                //AJUSTAR MARCA
+                string marca = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                foreach(var marcas in marcasCerveja)
+                {   
+                    if (marca.ToLower().Contains(marcas))
+                        item.Marca = marcas;
+                }
 
                 items.Add(item);
 
