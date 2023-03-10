@@ -27,15 +27,25 @@ namespace WebScraping.Driver
         Regex montarQuantidade = new Regex(@"\d+(Un|Unidade|Unidades|unidade|unidades)");
         Regex montarQuantidades = new Regex(@"\d+");
 
-        string[] marcasCerveja = { "skol", "heineken", "amstel", "dalla", "big john", "brahma", "antarctica" };
+        string[] marcasCerveja = { "skol", "heineken", "amstel", "dalla", "big john", "brahma", "antarctica, bierbaum, itaipava" };
         
-        public void BuscarMoura(string link)
+        public void BuscarBrasao(string link)
         {
             if(driver == null)
                 StartBrowser();
 
             Navigate(link);
-            Thread.Sleep(20000);
+            Thread.Sleep(5000);
+
+            ((IJavaScriptExecutor)driver).ExecuteScript("window.scrollTo(0, document.body.scrollHeight)");
+            long scrollHeight = 25000;
+            int scrollIncrement = 1000;
+            for (int i = 0; i <= scrollHeight; i += scrollIncrement)
+            {
+                ((IJavaScriptExecutor)driver).ExecuteScript($"window.scrollTo(0, {i})");
+                Thread.Sleep(200); // espera 100 milissegundos
+            }
+            
 
             ICollection<IWebElement> elements = new List<IWebElement>();
 
@@ -49,18 +59,18 @@ namespace WebScraping.Driver
                     {
                        
                         elements = GetValue(TypeElement.Xpath, "/html/body/app-root/app-sm-master-page/main/section/app-departments/app-list-departments-products-category/app-grid-product-body/div/div")
-                               .element.FindElements(By.ClassName("list-product-link"));
+                               .element.FindElements(By.ClassName("list-product-item"));
 
                        
                         break;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message + "Moura");
+                        Console.WriteLine(ex.Message + "Brasão");
                     }
                 }
                 else
-                    Console.WriteLine("Não conseguiu buscar os dados do moura contador " + i);
+                    Console.WriteLine("Não conseguiu buscar os dados do Brasão contador " + i);
                     
 
 
@@ -74,20 +84,20 @@ namespace WebScraping.Driver
             foreach(var element in elements)
             {
                 var item = new Item();
-                item.Mercado = "Moura";
+                item.Mercado = "Brasão";
                 //AJUSTAR PREÇO
-                Match preco = montarPreco.Match(element.FindElement(By.XPath("/html/body/app-root/app-sm-master-page/main/section/app-departments/app-list-departments-products-category/app-grid-product-body/div/div/div/div/div[1]/div[1]/app-list-product-item[1]/div/div/a/div[1]/div[1]")).Text);
+                Match preco = montarPreco.Match(element.FindElement(By.ClassName("area-preco")).Text);
                 item.Preco = Convert.ToDecimal(preco.Value);
 
                 //AJUSTAR TITULO
-                item.Titulo = element.FindElement(By.XPath("/html/body/app-root/app-sm-master-page/main/section/app-departments/app-list-departments-products-category/app-grid-product-body/div/div/div/div/div[1]/div[1]/app-list-product-item[1]/div/div/a/div[2]/h3/a")).Text;
+                item.Titulo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
 
                 //AJUSTAR UNIDADE
-                Match unidade = montarUnidade.Match(element.FindElement(By.XPath("/html/body/app-root/app-sm-master-page/main/section/app-departments/app-list-departments-products-category/app-grid-product-body/div/div/div/div/div[1]/div[1]/app-list-product-item[1]/div/div/a/div[2]/h3/a")).Text);
+                Match unidade = montarUnidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
                 item.Unidade = Convert.ToString(unidade.Value);
 
                 //AJUSTAR QUANTIDADE
-                Match  quantidade  = montarQuantidade.Match(element.FindElement(By.XPath("/html/body/app-root/app-sm-master-page/main/section/app-departments/app-list-departments-products-category/app-grid-product-body/div/div/div/div/div[1]/div[1]/app-list-product-item[1]/div/div/a/div[2]/h3/a")).Text);
+                Match  quantidade  = montarQuantidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
                 Match quantidades = montarQuantidades.Match(quantidade.Value); 
                 if (quantidades.Value == "")
                     item.Quantidade = 1;
@@ -95,7 +105,7 @@ namespace WebScraping.Driver
                     item.Quantidade = Convert.ToInt32(quantidades.Value);
 
                 //AJUSTAR MARCA
-                string marca = element.FindElement(By.XPath("/html/body/app-root/app-sm-master-page/main/section/app-departments/app-list-departments-products-category/app-grid-product-body/div/div/div/div/div[1]/div[1]/app-list-product-item[1]/div/div/a/div[2]/h3/a")).Text;
+                string marca = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
                 foreach(var marcas in marcasCerveja)
                 {   
                     if (marca.ToLower().Contains(marcas))
