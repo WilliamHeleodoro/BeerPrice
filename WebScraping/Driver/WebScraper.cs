@@ -1,4 +1,5 @@
-﻿using Dados;
+﻿using com.sun.imageio.plugins.common;
+using Dados;
 using EasyAutomationFramework;
 using javax.swing;
 using OpenQA.Selenium;
@@ -27,13 +28,15 @@ namespace WebScraping.Driver
         Regex montarQuantidade = new Regex(@"\d+(Un|Unidade|Unidades|unidade|unidades)");
         Regex montarQuantidades = new Regex(@"\d+");
 
-        string[] marcasCerveja = { "skol", "heineken", "amstel", "dalla", "big john", "brahma", "antarctica, bierbaum, itaipava" };
+        string[] marcasCerveja = { @"Skol", "Heineken", "Amstel", "Dalla", "Devassa", "Budweiser", "Brahma", "Antarctica", "Bohemia" ,
+                "Original", "Eisenbahn", "Corona","Stella", "Big John", "Coronita", "Patagonia", "Estrella", "Weiss", "Itaipava", "Becks",
+                "Baly", "BellaVista", "Cabare", "Coruja", "Bierbaum" };
         
         public void BuscarBrasao(string link)
         {
             if(driver == null)
-                StartBrowser();
-
+                StartBrowser(TypeDriver.GoogleChorme, null);
+            
             Navigate(link);
             Thread.Sleep(5000);
 
@@ -108,11 +111,16 @@ namespace WebScraping.Driver
                 string marca = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
                 foreach(var marcas in marcasCerveja)
                 {   
-                    if (marca.ToLower().Contains(marcas))
+                    if (marca.ToLower().Contains(marcas.ToLower()))
+                    {
                         item.Marca = marcas;
+                        break;
+                    }
+                        
                 }
 
-                items.Add(item);
+                if (item.Marca != "")
+                    items.Add(item);
 
             }
 
@@ -129,6 +137,15 @@ namespace WebScraping.Driver
 
             Navigate(link);
             Thread.Sleep(10000);
+
+            ((IJavaScriptExecutor)driver).ExecuteScript("window.scrollTo(0, document.body.scrollHeight)");
+            long scrollHeight = 25000;
+            int scrollIncrement = 1000;
+            for (int i = 0; i <= scrollHeight; i += scrollIncrement)
+            {
+                ((IJavaScriptExecutor)driver).ExecuteScript($"window.scrollTo(0, {i})");
+                Thread.Sleep(200); // espera 100 milissegundos
+            }
 
             ICollection<IWebElement> elements = new List<IWebElement>();
 
@@ -179,20 +196,32 @@ namespace WebScraping.Driver
                 else
                     item.Quantidade = Convert.ToInt32(quantidades.Value);
 
+                //AJUSTAR IMAGEM
+
+                //var imgElement = element.FindElement(By.CssSelector("img.img-container--product"));
+
+                var imgElement = element.FindElement(By.ClassName("img-container--product"));
+                item.Imagem = imgElement.GetAttribute("src");
+
                 //AJUSTAR MARCA
                 string marca = element.FindElement(By.ClassName("description")).Text;
                 foreach (var marcas in marcasCerveja)
                 {
-                    if (marca.ToLower().Contains(marcas))
+                    if (marca.ToLower().Contains(marcas.ToLower()))
+                    {
                         item.Marca = marcas;
+                        break;
+                    }
                 }
 
-                items.Add(item);
+                if (item.Marca != "")
+                    items.Add(item);
 
             }
 
             inserirItem();
             CloseBrowser();
+            driver = null;
 
         }
 
@@ -201,13 +230,13 @@ namespace WebScraping.Driver
             Repositorio repositorio = new Repositorio();
             foreach (var item in items)
             {
-                if(repositorio.ItemExiste(item.Mercado, item.Marca, item.Unidade, item.Quantidade))
+                if(repositorio.ItemExiste(item.Mercado, item.Marca, item.Unidade, item.Quantidade, item.Titulo))
                 {
-                    repositorio.AtualizarItem(item.Mercado, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade);
+                    repositorio.AtualizarItem(item.Mercado, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
                     continue;
                 }
 
-                repositorio.InserirItem(item.Mercado, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade);
+                repositorio.InserirItem(item.Mercado, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
             }
 
         }

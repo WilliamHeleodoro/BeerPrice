@@ -33,5 +33,8 @@ namespace WebScraping.Model
         [Column("quantidade")]
         public int Quantidade { get; set; }
 
+        [Column("imagem")]
+        public string Imagem { get; set; } = "";
+
     }
 }

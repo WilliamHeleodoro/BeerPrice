@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraping", "Scraping", "{14
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Conexao", "Conexao", "{297E1E3B-8852-4117-BA7B-BB10389A754F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dados", "Dados\Dados.csproj", "{4CB02320-8B64-421E-933F-F15865B9FF3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dados", "Dados\Dados.csproj", "{4CB02320-8B64-421E-933F-F15865B9FF3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
