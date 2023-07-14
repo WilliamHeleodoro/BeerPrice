@@ -18,6 +18,9 @@ namespace WebScraping.Model
         [Column("mercado")]
         public string Mercado { get; set; } = "";
 
+        [Column("tipo")]
+        public string Tipo { get; set; } = "";
+
         [Column("marca")]
         public string Marca { get; set; } = "";
 
@@ -28,10 +31,10 @@ namespace WebScraping.Model
         public decimal Preco { get; set; }
 
         [Column("unidade")]
-        public string Unidade { get; set; } = "";
+        public int Unidade { get; set; }
 
         [Column("quantidade")]
-        public int Quantidade { get; set; }
+        public string Quantidade { get; set; } = "";
 
         [Column("imagem")]
         public string Imagem { get; set; } = "";

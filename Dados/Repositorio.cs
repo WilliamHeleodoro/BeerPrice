@@ -11,12 +11,13 @@ namespace Dados
     public class Repositorio
     {
         Conexao conexao = new Conexao();
-        public  void InserirItem(string mercado, string marca, string titulo, decimal preco, string unidade, int quantidade, string imagem)
+        public  void InserirItem(string mercado, string tipo, string marca, string titulo, decimal preco, int unidade, string quantidade, string imagem)
         {
-            var sql = "INSERT INTO ITEM (mercado, marca, titulo, preco, unidade, quantidade, imagem) " +
-                "VALUES (@mercado, @marca, @titulo, @preco, @unidade, @quantidade, @imagem)";
+            var sql = "INSERT INTO ITEM (mercado, tipo, marca, titulo, preco, unidade, quantidade, imagem) " +
+                "VALUES (@mercado, @tipo, @marca, @titulo, @preco, @unidade, @quantidade, @imagem)";
 
             var parametros = new Dictionary<string, object> { { "@mercado", mercado },
+                { "@tipo", tipo },
                 { "@marca", marca },
                 { "@titulo", titulo },
                 { "@preco", preco },
@@ -29,16 +30,16 @@ namespace Dados
             conexao.ConexaoPostgres().Close();
         }
 
-        public bool ItemExiste(string mercado, string marca, string unidade, int quantidade, string titulo)
+        public bool ItemExiste(string mercado, string marca, int unidade, string quantidade, string tipo)
         {
             var sql = "SELECT TITULO FROM ITEM WHERE MERCADO = @mercado AND MARCA = @marca AND UNIDADE = @unidade " +
-                "AND QUANTIDADE = @quantidade AND TITULO = @titulo";
+                "AND QUANTIDADE = @quantidade AND TIPO = @tipo";
 
             var parametros = new Dictionary<string, object> { { "@mercado", mercado },
                 { "@marca", marca },
                 { "@unidade", unidade },
                 { "@quantidade", quantidade },
-                { "@titulo", titulo }};
+                { "@tipo", tipo }};
 
             var T = conexao.ConexaoPostgres().Query(sql, parametros);
             conexao.ConexaoPostgres().Close();
@@ -53,19 +54,21 @@ namespace Dados
             }
         }
 
-        public void AtualizarItem(string mercado, string marca, string titulo, decimal preco, string unidade, int quantidade, string imagem)
+        public void AtualizarItem(string mercado, string tipo, string marca, string titulo, decimal preco, int unidade, string quantidade, string imagem)
         {
             var sql = "UPDATE ITEM " +
                 "SET mercado = @mercado, " +
+                "tipo = @tipo, " +
                 "marca = @marca, " +
                 "titulo = @titulo, " +
                 "preco = @preco, " +
                 "unidade = @unidade, " +
                 "quantidade = @quantidade, " +
                 "imagem = @imagem " +   
-                "WHERE MERCADO = @mercado AND MARCA = @marca AND UNIDADE = @unidade AND QUANTIDADE = @quantidade";
+                "WHERE MERCADO = @mercado AND MARCA = @marca AND UNIDADE = @unidade AND QUANTIDADE = @quantidade AND TIPO = @tipo";
 
             var parametros = new Dictionary<string, object> { { "@mercado", mercado },
+                { "@tipo", tipo },
                 { "@marca", marca },
                 { "@titulo", titulo },
                 { "@preco", preco },

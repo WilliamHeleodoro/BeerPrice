@@ -24,14 +24,15 @@ namespace WebScraping.Driver
         List<Item> items = new List<Item>();
 
         Regex montarPreco = new Regex(@"\d+(,\d{1,2})?");
-        Regex montarUnidade = new Regex(@"\d+([,.]\d+)?(L|l|ml|Ml|ML)");
-        Regex montarQuantidade = new Regex(@"\d+(Un|Unidade|Unidades|unidade|unidades)");
-        Regex montarQuantidades = new Regex(@"\d+");
+        Regex montarQuantidade = new Regex(@"\d+([,.]\d+)?(L|l|ml|Ml|ML)");
+        Regex montarUnidade = new Regex(@"\d+(Un|Unidade|Unidades|unidade|unidades)");
+        Regex montarUnidades = new Regex(@"\d+");
 
         string[] marcasCerveja = { @"Skol", "Heineken", "Amstel", "Dalla", "Devassa", "Budweiser", "Brahma", "Antarctica", "Bohemia" ,
-                "Original", "Eisenbahn", "Corona","Stella", "Big John", "Coronita", "Patagonia", "Estrella", "Weiss", "Itaipava", "Becks",
-                "Baly", "BellaVista", "Cabare", "Coruja", "Bierbaum" };
-        
+                "Original", "Eisenbahn", "Corona","Stella", "Big John", "Coronita", "Patagonia", "Sol", "Estrella", "Weiss", "Itaipava", "Becks",
+                "Petra", "Kaiser", "LassBerg", "Kilsen", "Cristal", "Baly", "BellaVista", "Cabare", "Coruja", "Bierbaum" };
+
+        string[] tipoCerveja = { @"Malzbier", "Ipa", "Pale Ale", "Beats" };
         public void BuscarBrasao(string link)
         {
             if(driver == null)
@@ -95,23 +96,48 @@ namespace WebScraping.Driver
                 //AJUSTAR TITULO
                 item.Titulo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
 
-                //AJUSTAR UNIDADE
-                Match unidade = montarUnidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
-                item.Unidade = Convert.ToString(unidade.Value);
-
                 //AJUSTAR QUANTIDADE
-                Match  quantidade  = montarQuantidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
-                Match quantidades = montarQuantidades.Match(quantidade.Value); 
-                if (quantidades.Value == "")
-                    item.Quantidade = 1;
+                Match quantidade = montarQuantidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
+                item.Quantidade = Convert.ToString(quantidade.Value);
+
+                //AJUSTAR UNIDADE
+                Match  unidade  = montarUnidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
+                Match unidades = montarUnidades.Match(unidade.Value); 
+                if (unidades.Value == "")
+                    item.Unidade = 1;
                 else
-                    item.Quantidade = Convert.ToInt32(quantidades.Value);
+                    item.Unidade = Convert.ToInt32(unidades.Value);
+
+                //AJUSTAR IMAGEM
+
+                var imgElement = element.FindElement(By.ClassName("img-fluid"));
+                item.Imagem = imgElement.GetAttribute("src");
+
+                //AJUSTAR TIPO
+                string tipo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+
+                foreach (var tipos in tipoCerveja)
+                {
+                    if (tipo.Normalize(NormalizationForm.FormD).Contains(tipos.Normalize(NormalizationForm.FormD)))
+                    {
+                        if (tipo == "Beats")
+                            item.Tipo = "Mista";
+
+                        item.Tipo = tipos;
+                        break;
+                    }
+                    else
+                        item.Tipo = "Lager";
+                }
 
                 //AJUSTAR MARCA
-                string marca = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
-                foreach(var marcas in marcasCerveja)
-                {   
-                    if (marca.ToLower().Contains(marcas.ToLower()))
+                string marca = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text; 
+
+                marca = marca.Replace("'", "");
+
+                foreach (var marcas in marcasCerveja)
+                {
+                    if (marca.Normalize(NormalizationForm.FormD).Contains(marcas.Normalize(NormalizationForm.FormD)))
                     {
                         item.Marca = marcas;
                         break;
@@ -177,31 +203,59 @@ namespace WebScraping.Driver
             {
                 var item = new Item();
                 item.Mercado = "Celeiro";
+                
                 //AJUSTAR PREÇO
-                Match preco = montarPreco.Match(element.FindElement(By.ClassName("info-price")).Text);
-                item.Preco = Convert.ToDecimal(preco.Value);
+                var precoAjustado = element.FindElements(By.ClassName("info-price"));
+                
+                string apartir = element.FindElement(By.ClassName("info-text")).Text; 
+
+                if (element.FindElement(By.ClassName("description ")).Text == "Cerveja Brahma 350ml Lata Duplo Malte")
+                    Console.WriteLine("Parou");
+                if (precoAjustado.Count() > 2 && !apartir.Contains("partir"))
+                {
+                    Match preco = montarPreco.Match(precoAjustado[2].Text);
+                    item.Preco = Convert.ToDecimal(preco.Value);
+                }
+                else
+                {
+                    Match preco = montarPreco.Match(precoAjustado[0].Text);
+                    item.Preco = Convert.ToDecimal(preco.Value);
+                }
+                
 
                 //AJUSTAR TITULO
                 item.Titulo = element.FindElement(By.ClassName("description ")).Text;
 
-                //AJUSTAR UNIDADE
-                Match unidade = montarUnidade.Match(element.FindElement(By.ClassName("description")).Text);
-                item.Unidade = Convert.ToString(unidade.Value);
-
                 //AJUSTAR QUANTIDADE
                 Match quantidade = montarQuantidade.Match(element.FindElement(By.ClassName("description")).Text);
-                Match quantidades = montarQuantidades.Match(quantidade.Value);
-                if (quantidades.Value == "")
-                    item.Quantidade = 1;
+                item.Quantidade = Convert.ToString(quantidade.Value);
+
+                //AJUSTAR Unidade
+                Match unidade = montarUnidade.Match(element.FindElement(By.ClassName("description")).Text);
+                Match unidades = montarUnidades.Match(unidade.Value);
+                if (unidades.Value == "")
+                    item.Unidade = 1;
                 else
-                    item.Quantidade = Convert.ToInt32(quantidades.Value);
+                    item.Unidade = Convert.ToInt32(unidades.Value);
 
                 //AJUSTAR IMAGEM
 
-                //var imgElement = element.FindElement(By.CssSelector("img.img-container--product"));
-
                 var imgElement = element.FindElement(By.ClassName("img-container--product"));
                 item.Imagem = imgElement.GetAttribute("src");
+
+                //AJUSTAR TIPO
+                string tipo = element.FindElement(By.ClassName("description")).Text;
+
+                foreach (var tipos in tipoCerveja)
+                {
+                    if (tipo.Normalize(NormalizationForm.FormD).Contains(tipos.Normalize(NormalizationForm.FormD)))
+                    {
+                            item.Tipo = tipos;
+                            break;     
+                    }
+                    else
+                        item.Tipo = "Lager";
+                }
 
                 //AJUSTAR MARCA
                 string marca = element.FindElement(By.ClassName("description")).Text;
@@ -214,12 +268,12 @@ namespace WebScraping.Driver
                     }
                 }
 
-                if (item.Marca != "")
+                if (item.Marca != "" && item.Tipo != "Beats")
                     items.Add(item);
 
             }
 
-            inserirItem();
+           inserirItem();
             CloseBrowser();
             driver = null;
 
@@ -230,13 +284,13 @@ namespace WebScraping.Driver
             Repositorio repositorio = new Repositorio();
             foreach (var item in items)
             {
-                if(repositorio.ItemExiste(item.Mercado, item.Marca, item.Unidade, item.Quantidade, item.Titulo))
+                if(repositorio.ItemExiste(item.Mercado, item.Marca, item.Unidade, item.Quantidade, item.Tipo))
                 {
-                    repositorio.AtualizarItem(item.Mercado, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
+                    repositorio.AtualizarItem(item.Mercado, item.Tipo, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
                     continue;
                 }
 
-                repositorio.InserirItem(item.Mercado, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
+                repositorio.InserirItem(item.Mercado, item.Tipo, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
             }
 
         }
