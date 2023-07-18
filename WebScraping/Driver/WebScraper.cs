@@ -25,7 +25,8 @@ namespace WebScraping.Driver
 
         Regex montarPreco = new Regex(@"\d+(,\d{1,2})?");
         Regex montarQuantidade = new Regex(@"\d+([,.]\d+)?(L|l|ml|Ml|ML)");
-        Regex montarUnidade = new Regex(@"\d+(Un|Unidade|Unidades|unidade|unidades)");
+        //Regex montarQuantidade = new Regex(@"(\d+)X(\d+)\s?(Ml|ML)");
+        Regex montarUnidade = new Regex(@"\d+(Un|un|Unidade|Unidades|unidade|unidades)");
         Regex montarUnidades = new Regex(@"\d+");
 
         string[] marcasCerveja = { @"Skol", "Heineken", "Amstel", "Dalla", "Devassa", "Budweiser", "Brahma", "Antarctica", "Bohemia" ,
@@ -33,7 +34,7 @@ namespace WebScraping.Driver
                 "Petra", "Kaiser", "LassBerg", "Kilsen", "Cristal", "Baly", "BellaVista", "Cabare", "Coruja", "Bierbaum" };
 
         string[] tipoCerveja = { @"Malzbier", "Ipa", "Pale Ale", "Beats" };
-        public void BuscarBrasao(string link)
+        public void BuscarBrasaoeMoura(string link, string mercado)
         {
             if(driver == null)
                 StartBrowser(TypeDriver.GoogleChorme, null);
@@ -88,23 +89,37 @@ namespace WebScraping.Driver
             foreach(var element in elements)
             {
                 var item = new Item();
-                item.Mercado = "Brasão";
+                item.Mercado = mercado;
                 //AJUSTAR PREÇO
                 Match preco = montarPreco.Match(element.FindElement(By.ClassName("area-preco")).Text);
                 item.Preco = Convert.ToDecimal(preco.Value);
 
-                //AJUSTAR TITULO
-                item.Titulo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
-
                 //AJUSTAR QUANTIDADE
-                Match quantidade = montarQuantidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
-                item.Quantidade = Convert.ToString(quantidade.Value);
+                var buscarString = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                buscarString = buscarString.Replace(" Ml", "Ml");
+                buscarString = buscarString.Replace("Litros", "L");
+                buscarString = buscarString.Replace(" L", "L");
+
+                Match quantidade = montarQuantidade.Match(buscarString);
+                item.Quantidade = Convert.ToString(quantidade.Value).ToUpper();
 
                 //AJUSTAR UNIDADE
                 Match  unidade  = montarUnidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
                 Match unidades = montarUnidades.Match(unidade.Value); 
+                if(item.Titulo.Contains("12X350ml"))
+                    Console.WriteLine();
                 if (unidades.Value == "")
-                    item.Unidade = 1;
+                {
+                    Match unidade2 = montarUnidade.Match(element.FindElement(By.ClassName("badge-mob")).Text);
+                    if(Convert.ToString(unidade2) != "")
+                    {
+                        Match unidades2 = montarUnidades.Match(unidade2.Value);
+                        item.Unidade = Convert.ToInt32(unidades2.Value);
+                    }
+                    else
+                        item.Unidade = 1;
+                }
+                    
                 else
                     item.Unidade = Convert.ToInt32(unidades.Value);
 
@@ -120,9 +135,6 @@ namespace WebScraping.Driver
                 {
                     if (tipo.Normalize(NormalizationForm.FormD).Contains(tipos.Normalize(NormalizationForm.FormD)))
                     {
-                        if (tipo == "Beats")
-                            item.Tipo = "Mista";
-
                         item.Tipo = tipos;
                         break;
                     }
@@ -145,7 +157,10 @@ namespace WebScraping.Driver
                         
                 }
 
-                if (item.Marca != "")
+                //TITULO
+                item.Titulo = "Cerveja " + item.Tipo + " " + item.Marca;
+
+                if (item.Marca != "" && item.Quantidade != "")
                     items.Add(item);
 
             }
@@ -221,14 +236,16 @@ namespace WebScraping.Driver
                     Match preco = montarPreco.Match(precoAjustado[0].Text);
                     item.Preco = Convert.ToDecimal(preco.Value);
                 }
-                
-
-                //AJUSTAR TITULO
-                item.Titulo = element.FindElement(By.ClassName("description ")).Text;
 
                 //AJUSTAR QUANTIDADE
-                Match quantidade = montarQuantidade.Match(element.FindElement(By.ClassName("description")).Text);
-                item.Quantidade = Convert.ToString(quantidade.Value);
+                var buscarString = element.FindElement(By.ClassName("description")).Text;
+
+                buscarString = buscarString.Replace(" Ml", "Ml");
+                buscarString = buscarString.Replace("Litros", "L");
+                buscarString = buscarString.Replace(" L", "L");
+
+                Match quantidade = montarQuantidade.Match(buscarString);
+                item.Quantidade = Convert.ToString(quantidade.Value).ToUpper();
 
                 //AJUSTAR Unidade
                 Match unidade = montarUnidade.Match(element.FindElement(By.ClassName("description")).Text);
@@ -259,6 +276,9 @@ namespace WebScraping.Driver
 
                 //AJUSTAR MARCA
                 string marca = element.FindElement(By.ClassName("description")).Text;
+                
+                marca = marca.Replace("'", "");
+
                 foreach (var marcas in marcasCerveja)
                 {
                     if (marca.ToLower().Contains(marcas.ToLower()))
@@ -268,12 +288,15 @@ namespace WebScraping.Driver
                     }
                 }
 
-                if (item.Marca != "" && item.Tipo != "Beats")
+                //TITULO
+                item.Titulo = "Cerveja " + item.Tipo + "" + item.Marca;
+
+                if (item.Marca != "" && item.Tipo != "Beats" && item.Quantidade != "")
                     items.Add(item);
 
             }
 
-           inserirItem();
+            inserirItem();
             CloseBrowser();
             driver = null;
 
