@@ -24,6 +24,9 @@ namespace WebScraping.Model
         [Column("marca")]
         public string Marca { get; set; } = "";
 
+        [Column("caracteristica")]
+        public string Caracteristica { get; set; } = "";
+
         [Column("titulo")]
         public string Titulo { get; set; } = "";
 

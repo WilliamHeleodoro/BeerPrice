@@ -1,16 +1,6 @@
-﻿using com.sun.imageio.plugins.common;
-using Dados;
+﻿using Dados;
 using EasyAutomationFramework;
-using javax.swing;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.Extensions;
-using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -21,7 +11,9 @@ namespace WebScraping.Driver
 {
     public class WebScraper : Web
     {
-        List<Item> items = new List<Item>();
+        List<Item> itemsSuperVermelho = new List<Item>();
+        List<Item> itemsSuperVerde = new List<Item>();
+        List<Item> itemsSuperRoxo = new List<Item>();
 
         Regex montarPreco = new Regex(@"\d+(,\d{1,2})?");
         Regex montarQuantidade = new Regex(@"\d+([,.]\d+)?(L|l|ml|Ml|ML)");
@@ -33,7 +25,11 @@ namespace WebScraping.Driver
                 "Original", "Eisenbahn", "Corona","Stella", "Big John", "Coronita", "Patagonia", "Sol", "Estrella", "Weiss", "Itaipava", "Becks",
                 "Petra", "Kaiser", "LassBerg", "Kilsen", "Cristal", "Baly", "BellaVista", "Cabare", "Coruja", "Bierbaum" };
 
-        string[] tipoCerveja = { @"Malzbier", "Ipa", "Pale Ale", "Beats" };
+        string[] tipoCerveja = { @"Ipa", "Pale Ale", "Beats" };
+
+        string[] caracteristicas = { @"Unfiltered", "Duplo Malte", "Duplo Mate Escura", "Zero", "Sem Alcool", "Malzbier", "Sem Glúten", "Puro Malte" };
+
+        string[] produtos = { @"Cerveja", "Chopp" };
         public void BuscarBrasaoeMoura(string link, string mercado)
         {
             if(driver == null)
@@ -124,7 +120,6 @@ namespace WebScraping.Driver
                     item.Unidade = Convert.ToInt32(unidades.Value);
 
                 //AJUSTAR IMAGEM
-
                 var imgElement = element.FindElement(By.ClassName("img-fluid"));
                 item.Imagem = imgElement.GetAttribute("src");
 
@@ -157,21 +152,58 @@ namespace WebScraping.Driver
                         
                 }
 
-                //TITULO
-                item.Titulo = "Cerveja " + item.Tipo + " " + item.Marca;
+                //AJUSTAR CARACTERISTICA
+                string tituloCerveja = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
 
-                if (item.Marca != "" && item.Quantidade != "")
-                    items.Add(item);
+                foreach (var caracter in caracteristicas)
+                {
+                    if (tituloCerveja.ToLower().Normalize(NormalizationForm.FormD).Contains(caracter.ToLower().Normalize(NormalizationForm.FormD)))
+                    {
+                        if (caracter == "Zero" || caracter == "Sem Alcool")
+                            item.Caracteristica = "Zero";
+                        else if (caracter == "Puro Malte" && item.Marca != "Skol")
+                            item.Caracteristica = "";
+                        else
+                            item.Caracteristica = caracter;
+
+                        break;
+                    }
+
+                }
+
+                //TITULO
+                var titulo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+
+                foreach (var produto in produtos)
+                {
+                    if (titulo.Normalize(NormalizationForm.FormD).Contains(produto.Normalize(NormalizationForm.FormD)))
+                    {
+                        item.Titulo = produto + " " + item.Tipo + " " + item.Marca + " " + item.Caracteristica;
+                        break;
+                    }
+                    else
+                    {
+                        item.Titulo = "Cerveja " + item.Tipo + " " + item.Marca + " " + item.Caracteristica;
+                    }
+                }
+
+                if(item.Mercado == "Super Vermelho")
+                    if (item.Marca != "" && item.Quantidade != "")
+                          itemsSuperVermelho.Add(item);
+
+                else if (item.Mercado == "Super Verde")
+                    if (item.Marca != "" && item.Quantidade != "")
+                        itemsSuperVerde.Add(item);
 
             }
 
-            inserirItem();
+            inserirItem(mercado);
             CloseBrowser();
             driver = null;
 
         }
 
-        public void BuscarCeleiro(string link)
+        public void BuscarCeleiro(string link, string mercado)
         {
             if (driver == null)
                 StartBrowser();
@@ -217,7 +249,7 @@ namespace WebScraping.Driver
             foreach (var element in elements)
             {
                 var item = new Item();
-                item.Mercado = "Celeiro";
+                item.Mercado = mercado;
                 
                 //AJUSTAR PREÇO
                 var precoAjustado = element.FindElements(By.ClassName("info-price"));
@@ -288,32 +320,76 @@ namespace WebScraping.Driver
                     }
                 }
 
+                //AJUSTAR CARACTERISTICA
+                string tituloCerveja = element.FindElement(By.ClassName("description")).Text;
+
+                foreach (var caracter in caracteristicas)
+                {
+                    if (tituloCerveja.ToLower().Normalize(NormalizationForm.FormD).Contains(caracter.ToLower().Normalize(NormalizationForm.FormD)))
+                    {
+                        if (caracter == "Zero" || caracter == "Sem Alcool")
+                            item.Caracteristica = "Zero";
+                        else if (caracter == "Puro Malte" && item.Marca != "Skol")
+                            item.Caracteristica = "";
+                        else
+                            item.Caracteristica = caracter;
+
+                        break;
+                    }
+
+                }
+
                 //TITULO
-                item.Titulo = "Cerveja " + item.Tipo + "" + item.Marca;
+                var titulo = element.FindElement(By.ClassName("description")).Text;
+
+                foreach (var produto in produtos)
+                {
+                    if (titulo.Normalize(NormalizationForm.FormD).Contains(produto.Normalize(NormalizationForm.FormD)))
+                    {
+                        item.Titulo = produto + " " + item.Tipo + " " + item.Marca + " " + item.Caracteristica;
+                        break;
+                    }
+                    else
+                    {
+                        item.Titulo = "Cerveja " + item.Tipo + " " + item.Marca + " " + item.Caracteristica;
+                    }
+                }
 
                 if (item.Marca != "" && item.Tipo != "Beats" && item.Quantidade != "")
-                    items.Add(item);
+                    itemsSuperRoxo.Add(item);
 
             }
 
-            inserirItem();
+            inserirItem(mercado);
             CloseBrowser();
             driver = null;
 
         }
 
-        public void inserirItem()
+        public void inserirItem(string mercado)
         {
+            List<Item> items = new List<Item>();
+
+            if (mercado == "Super Vermelho")
+                items = itemsSuperVermelho;
+            else if (mercado == "Super Verde")
+                items = itemsSuperVerde;
+            else if (mercado == "Super Roxo")
+                items = itemsSuperRoxo;
+
             Repositorio repositorio = new Repositorio();
             foreach (var item in items)
             {
-                if(repositorio.ItemExiste(item.Mercado, item.Marca, item.Unidade, item.Quantidade, item.Tipo))
+                if(repositorio.ItemExiste(item.Mercado, item.Marca, item.Unidade, item.Quantidade, item.Tipo,
+                    item.Caracteristica))
                 {
-                    repositorio.AtualizarItem(item.Mercado, item.Tipo, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
+                    repositorio.AtualizarItem(item.Mercado, item.Tipo, item.Marca, item.Caracteristica, 
+                        item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
                     continue;
                 }
 
-                repositorio.InserirItem(item.Mercado, item.Tipo, item.Marca, item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
+                repositorio.InserirItem(item.Mercado, item.Tipo, item.Marca, item.Caracteristica,
+                    item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
             }
 
         }
