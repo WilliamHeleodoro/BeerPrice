@@ -6,12 +6,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Dados
+namespace Dados.Repositorios
 {
-    public class Repositorio
+    public class RepositorioInserirWebScraping
     {
         Conexao conexao = new Conexao();
-        public  void InserirItem(string mercado, string tipo, string marca, string caracteristica, string titulo, 
+        public void InserirItem(string mercado, string tipo, string marca, string caracteristica, string titulo,
             decimal preco, int unidade, string quantidade, string imagem)
         {
             var sql = "INSERT INTO ITEM (mercado, tipo, marca, caracteristica, titulo, preco, unidade, quantidade, imagem) " +
@@ -45,7 +45,7 @@ namespace Dados
                 { "@tipo", tipo },
                 { "@caracteristica", caracteristica }};
 
-        var T = conexao.ConexaoPostgres().Query(sql, parametros);
+            var T = conexao.ConexaoPostgres().Query(sql, parametros);
             conexao.ConexaoPostgres().Close();
 
             if (T.Count() > 0)
@@ -58,7 +58,7 @@ namespace Dados
             }
         }
 
-        public void AtualizarItem(string mercado, string tipo, string marca, string caracteristica, string titulo, 
+        public void AtualizarItem(string mercado, string tipo, string marca, string caracteristica, string titulo,
             decimal preco, int unidade, string quantidade, string imagem)
         {
 
@@ -71,7 +71,7 @@ namespace Dados
                 "preco = @preco, " +
                 "unidade = @unidade, " +
                 "quantidade = @quantidade, " +
-                "imagem = @imagem " +   
+                "imagem = @imagem " +
                 "WHERE MERCADO = @mercado AND MARCA = @marca AND UNIDADE = @unidade AND QUANTIDADE = @quantidade " +
                 "AND TIPO = @tipo AND CARACTERISTICA = @caracteristica";
 
@@ -89,5 +89,5 @@ namespace Dados
             conexao.ConexaoPostgres().Execute(sql, parametros);
             conexao.ConexaoPostgres().Close();
         }
-    }   
+    }
 }

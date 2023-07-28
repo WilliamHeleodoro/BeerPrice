@@ -1,4 +1,4 @@
-﻿using Dados;
+﻿using Dados.Repositorios;
 using EasyAutomationFramework;
 using OpenQA.Selenium;
 using System.Text;
@@ -191,7 +191,7 @@ namespace WebScraping.Driver
                     if (item.Marca != "" && item.Quantidade != "")
                           itemsSuperVermelho.Add(item);
 
-                else if (item.Mercado == "Super Verde")
+                if  (item.Mercado == "Super Verde")
                     if (item.Marca != "" && item.Quantidade != "")
                         itemsSuperVerde.Add(item);
 
@@ -256,8 +256,6 @@ namespace WebScraping.Driver
                 
                 string apartir = element.FindElement(By.ClassName("info-text")).Text; 
 
-                if (element.FindElement(By.ClassName("description ")).Text == "Cerveja Brahma 350ml Lata Duplo Malte")
-                    Console.WriteLine("Parou");
                 if (precoAjustado.Count() > 2 && !apartir.Contains("partir"))
                 {
                     Match preco = montarPreco.Match(precoAjustado[2].Text);
@@ -377,7 +375,7 @@ namespace WebScraping.Driver
             else if (mercado == "Super Roxo")
                 items = itemsSuperRoxo;
 
-            Repositorio repositorio = new Repositorio();
+            RepositorioInserirWebScraping repositorio = new RepositorioInserirWebScraping();
             foreach (var item in items)
             {
                 if(repositorio.ItemExiste(item.Mercado, item.Marca, item.Unidade, item.Quantidade, item.Tipo,
