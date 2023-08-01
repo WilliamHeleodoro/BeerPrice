@@ -23,5 +23,19 @@ namespace Dados.Controller
 
             return Ok(resultado);
         }
+
+        [HttpGet("{codigo:long}")]
+        public ActionResult BuscarCervejasMaiorPreco(long codigo, 
+            [FromServices] ServicoBuscarCevejaPeloMaiorPreco servicoBuscarCevejaPeloMaiorPreco)
+        {
+            var resultado = servicoBuscarCevejaPeloMaiorPreco.BucarCervejaMaiorPreco(codigo);
+
+            if (resultado.Titulo == "")
+            {
+                return BadRequest("Produto não existe"); // Retorna HTTP 400 - Bad Request
+            }
+
+            return Ok(resultado);
+        }
     }
 }

@@ -9,6 +9,8 @@ namespace Dados.Filtros
     public class FiltroObterCerveja
     {
         public string? filtroCaracteristica { get; set; }
+
+        public string? filtroTipo { get; set; }
         public int filtroUnidade { get; set; }
         public string? filtroMarca { get; set; }
         public string? filtroQuantidade { get; set; }

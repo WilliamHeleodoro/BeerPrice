@@ -32,5 +32,7 @@ void ConfigureServices(WebApplicationBuilder builder)
 {
     builder.Services.AddScoped<ServicoBuscarCervejas>();
     builder.Services.AddScoped<RepositorioBuscarCervejas>();
+    builder.Services.AddScoped<ServicoBuscarCevejaPeloMaiorPreco>();
+    builder.Services.AddScoped<RepositorioBuscarCervejaPeloMaiorPreco>();
 
 }

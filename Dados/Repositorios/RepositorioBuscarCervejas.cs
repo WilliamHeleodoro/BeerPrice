@@ -11,18 +11,30 @@ namespace Dados.Repositorios
         public List<CervejaDTO> BuscarCatalogoCervejas(FiltroObterCerveja filtros)
         {
             var sql = @"SELECT 
-                            DISTINCT TITULO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE,
-                            (SELECT IMAGEM
-                            	FROM ITEM AS IMAGEM
-                             	WHERE IMAGEM.MARCA = ITEM.MARCA 
-                             			AND IMAGEM.CARACTERISTICA = ITEM.CARACTERISTICA 
-                             			AND IMAGEM.QUANTIDADE = ITEM.QUANTIDADE 
-                             			AND IMAGEM.UNIDADE = ITEM.UNIDADE 
-                             	ORDER BY UNIDADE, CARACTERISTICA
-                             	LIMIT 1 
-                            )
-                            FROM ITEM
-                       WHERE 1=1 ";
+                        DISTINCT 
+                        TITULO, MARCA, TIPO, CARACTERISTICA, QUANTIDADE, UNIDADE,
+                        	(SELECT IMAGEM
+                        		FROM ITEM AS IMAGEM
+                        	    WHERE IMAGEM.MARCA = ITEM.MARCA 
+                        			AND IMAGEM.TIPO = ITEM.TIPO
+                        			AND IMAGEM.CARACTERISTICA = ITEM.CARACTERISTICA 
+                        			AND IMAGEM.QUANTIDADE = ITEM.QUANTIDADE 
+                        			AND IMAGEM.UNIDADE = ITEM.UNIDADE 
+                        		ORDER BY UNIDADE, CARACTERISTICA, TIPO
+                        		LIMIT 1 
+                        	),
+                        	(SELECT ID
+                        		FROM ITEM AS CODIGO
+                        		WHERE CODIGO.MARCA = ITEM.MARCA 
+                        			AND CODIGO.TIPO = ITEM.TIPO 
+                        			AND CODIGO.CARACTERISTICA = ITEM.CARACTERISTICA 
+                        			AND CODIGO.QUANTIDADE = ITEM.QUANTIDADE 
+                        			AND CODIGO.UNIDADE = ITEM.UNIDADE 
+                        		ORDER BY UNIDADE, CARACTERISTICA, TIPO
+                        		LIMIT 1 
+                        	)
+                        FROM ITEM
+                        WHERE 1=1 ";
 
             if (!string.IsNullOrEmpty(filtros?.filtroCaracteristica))
             {
@@ -30,7 +42,13 @@ namespace Dados.Repositorios
                 sql += "AND ITEM.CARACTERISTICA like @filtroCaracteristica ";
             }
 
-            if(filtros?.filtroUnidade != 0)
+            if (!string.IsNullOrEmpty(filtros?.filtroTipo))
+            {
+                filtros.filtroTipo = "%" + filtros.filtroTipo + "%";
+                sql += "AND ITEM.TIPO like @filtroTipo ";
+            }
+
+            if (filtros?.filtroUnidade != 0)
                 sql += "AND ITEM.UNIDADE = @filtroUnidade ";
 
             if (!string.IsNullOrEmpty(filtros?.filtroMarca))
