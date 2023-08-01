@@ -1,4 +1,5 @@
-﻿using Dados.Servicos;
+﻿using Dados.Filtros;
+using Dados.Servicos;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -8,14 +9,16 @@ namespace Dados.Controller
     [Route("cervejas")]
     public class CervejaController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult BuscarListaCervejas([FromServices] ServicoBuscarCervejas servicoBuscarCervejas)
+        [HttpPost]
+        public ActionResult BuscarListaCervejas([FromServices] ServicoBuscarCervejas servicoBuscarCervejas,
+            [FromBody] FiltroObterCerveja filtroObterCerveja
+            )
         {
-            var resultado = servicoBuscarCervejas.BuscarCervejas();
+            var resultado = servicoBuscarCervejas.BuscarCervejas(filtroObterCerveja);
 
             if (resultado == null || resultado.Count == 0)
             {
-                return BadRequest(); // Retorna HTTP 400 - Bad Request
+                return BadRequest("Produto não existe"); // Retorna HTTP 400 - Bad Request
             }
 
             return Ok(resultado);

@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Dados\Dados.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-
 </Project>

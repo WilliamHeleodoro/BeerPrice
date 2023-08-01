@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Conexao", "Conexao", "{297E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dados", "Dados\Dados.csproj", "{4CB02320-8B64-421E-933F-F15865B9FF3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aplicacao", "Aplicacao\Aplicacao.csproj", "{B8008558-2662-4000-A423-A5C24367C1CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aplicacao", "Aplicacao\Aplicacao.csproj", "{B8008558-2662-4000-A423-A5C24367C1CF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4CB02320-8B64-421E-933F-F15865B9FF3E} = {4CB02320-8B64-421E-933F-F15865B9FF3E}
 	EndProjectSection
