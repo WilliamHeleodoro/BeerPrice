@@ -7,7 +7,7 @@ web.BuscarBrasaoeMoura("https://www.sitemercado.com.br/brasaochapeco/chapeco-loj
 web.BuscarBrasaoeMoura("https://www.sitemercado.com.br/mourasupermercados/chapeco-loja-sao-cristovao-sao-cristovao-av-sao-pedro/produtos/bebidas-alcoolicas/cervejas", "Super Verde");
 web.BuscarCeleiro("https://www.celeiro.com.br/produtos/departamento/bebidas/cerveja-tradicional", "Super Roxo");
 web.BuscarCeleiro("https://www.celeiro.com.br/produtos/departamento/bebidas/cerveja-tradicional?page=2", "Super Roxo");
-
+web.inserirItem();
 
 
 

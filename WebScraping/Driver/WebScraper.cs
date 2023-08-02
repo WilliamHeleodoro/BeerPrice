@@ -11,23 +11,22 @@ namespace WebScraping.Driver
 {
     public class WebScraper : Web
     {
-        List<Item> itemsSuperVermelho = new List<Item>();
-        List<Item> itemsSuperVerde = new List<Item>();
-        List<Item> itemsSuperRoxo = new List<Item>();
+        List<Item> items = new List<Item>();
 
         Regex montarPreco = new Regex(@"\d+(,\d{1,2})?");
         Regex montarQuantidade = new Regex(@"\d+([,.]\d+)?(L|l|ml|Ml|ML)");
-        //Regex montarQuantidade = new Regex(@"(\d+)X(\d+)\s?(Ml|ML)");
         Regex montarUnidade = new Regex(@"\d+(Un|un|Unidade|Unidades|unidade|unidades)");
         Regex montarUnidades = new Regex(@"\d+");
 
-        string[] marcasCerveja = { @"Skol", "Heineken", "Amstel", "Dalla", "Devassa", "Budweiser", "Brahma", "Antarctica", "Bohemia" ,
-                "Original", "Eisenbahn", "Corona","Stella", "Big John", "Coronita", "Patagonia", "Sol", "Estrella", "Weiss", "Itaipava", "Becks",
-                "Petra", "Kaiser", "LassBerg", "Kilsen", "Cristal", "Baly", "BellaVista", "Cabare", "Coruja", "Bierbaum" };
+        string[] marcasCerveja = { @"Skol", "Heineken", "Amstel", "Dalla", "Devassa", "Budweiser", "Brahma", "Antarctica",
+                                    "Bohemia", "Original", "Eisenbahn", "Corona","Stella", "Big John", "Coronita", 
+                                    "Patagonia", "Sol", "Estrella", "Weiss", "Itaipava", "Becks", "Petra", "Kaiser", 
+                                    "LassBerg", "Kilsen", "Cristal", "Baly", "BellaVista", "Cabare", "Coruja", "Bierbaum" };
 
         string[] tipoCerveja = { @"Ipa", "Pale Ale", "Beats" };
 
-        string[] caracteristicas = { @"Unfiltered", "Duplo Malte", "Duplo Mate Escura", "Zero", "Sem Alcool", "Malzbier", "Sem Glúten", "Puro Malte" };
+        string[] caracteristicas = { @"Unfiltered", "Duplo Malte Escura", "Duplo Malte", "Zero", "Sem Alcool", "Malzbier", 
+                                    "Sem Glúten", "Extra", "Puro Malte" };
 
         string[] produtos = { @"Cerveja", "Chopp" };
         public void BuscarBrasaoeMoura(string link, string mercado)
@@ -119,6 +118,9 @@ namespace WebScraping.Driver
                 else
                     item.Unidade = Convert.ToInt32(unidades.Value);
 
+                if (item.Unidade == 1 && item.Preco > 20 && (item.Quantidade == "350ML" || item.Quantidade == "300ML"))
+                    continue;
+
                 //AJUSTAR IMAGEM
                 var imgElement = element.FindElement(By.ClassName("img-fluid"));
                 item.Imagem = imgElement.GetAttribute("src");
@@ -187,20 +189,12 @@ namespace WebScraping.Driver
                     }
                 }
 
-                if(item.Mercado == "Super Vermelho")
                     if (item.Marca != "" && item.Quantidade != "")
-                          itemsSuperVermelho.Add(item);
-
-                if  (item.Mercado == "Super Verde")
-                    if (item.Marca != "" && item.Quantidade != "")
-                        itemsSuperVerde.Add(item);
-
+                          items.Add(item);
             }
 
-            inserirItem(mercado);
             CloseBrowser();
             driver = null;
-
         }
 
         public void BuscarCeleiro(string link, string mercado)
@@ -253,7 +247,7 @@ namespace WebScraping.Driver
                 
                 //AJUSTAR PREÇO
                 var precoAjustado = element.FindElements(By.ClassName("info-price"));
-                
+
                 string apartir = element.FindElement(By.ClassName("info-text")).Text; 
 
                 if (precoAjustado.Count() > 2 && !apartir.Contains("partir"))
@@ -354,39 +348,27 @@ namespace WebScraping.Driver
                 }
 
                 if (item.Marca != "" && item.Tipo != "Beats" && item.Quantidade != "")
-                    itemsSuperRoxo.Add(item);
+                        items.Add(item);
 
             }
 
-            inserirItem(mercado);
             CloseBrowser();
             driver = null;
 
         }
 
-        public void inserirItem(string mercado)
-        {
-            List<Item> items = new List<Item>();
-
-            if (mercado == "Super Vermelho")
-                items = itemsSuperVermelho;
-            else if (mercado == "Super Verde")
-                items = itemsSuperVerde;
-            else if (mercado == "Super Roxo")
-                items = itemsSuperRoxo;
-
+        public void inserirItem()
+        {     
             RepositorioInserirWebScraping repositorio = new RepositorioInserirWebScraping();
+
+            repositorio.DeletarItens();
+
+            int id = 0;
+
             foreach (var item in items)
             {
-                if(repositorio.ItemExiste(item.Mercado, item.Marca, item.Unidade, item.Quantidade, item.Tipo,
-                    item.Caracteristica))
-                {
-                    repositorio.AtualizarItem(item.Mercado, item.Tipo, item.Marca, item.Caracteristica, 
-                        item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
-                    continue;
-                }
-
-                repositorio.InserirItem(item.Mercado, item.Tipo, item.Marca, item.Caracteristica,
+                id++;
+                repositorio.InserirItem(id, item.Mercado, item.Tipo, item.Marca, item.Caracteristica,
                     item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
             }
 
