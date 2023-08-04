@@ -1,12 +1,31 @@
 import React from "react";
-import {View, Text} from 'react-native';
+import { ScrollView } from "react-native";
 
-function Home(){
-    return(
-        <View>
-            <Text>Tela Home</Text>
-        </View>
-    )
+import { Container, SearchContainer, Input, SearchButton, ListaCervejas } from "./styles";
+import { Feather } from "@expo/vector-icons";
+
+import Header from "../../components/Header";
+import Cervejas from "../../components/ListaCervejas/listaCervejas";
+
+function Home() {
+  return (
+    <Container>
+      <Header title="Cátalogo de Cervejas" />
+
+      <SearchContainer>
+        <Input placeholder="Marca da Cerveja" placeholderTextColor="#ddd" />
+        <SearchButton>
+          <Feather name="search" size={30} color="#FFF" />
+        </SearchButton>
+      </SearchContainer>
+      <ScrollView>
+        <ListaCervejas
+            data={[1,2,3,4]}
+            renderItem={ ({ item }) => <Cervejas/>}
+        />
+      </ScrollView>
+    </Container>
+  );
 }
 
 export default Home;

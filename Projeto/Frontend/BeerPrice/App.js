@@ -1,12 +1,12 @@
 import React from "react";
-import {View, Text} from 'react-native';
+import Routes from './src/routes/rotas'
+
 
 function App(){
   return(
-    <View style={{ marginTop: 100 }}>
-      <Text style={{color: '#FF0000'}}>Programador</Text>
-    </View>
-  )
+    <Routes/>
+)
 }
+
 
 export default App;
