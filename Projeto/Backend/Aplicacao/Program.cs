@@ -24,6 +24,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+// Adicione esta linha para habilitar o CORS
+app.UseCors("AllowSpecificOrigin");
+
 app.MapControllers();
 
 app.Run();
@@ -34,5 +37,16 @@ void ConfigureServices(WebApplicationBuilder builder)
     builder.Services.AddScoped<RepositorioBuscarCervejas>();
     builder.Services.AddScoped<ServicoBuscarCevejaPeloMaiorPreco>();
     builder.Services.AddScoped<RepositorioBuscarCervejaPeloMaiorPreco>();
+
+    // Configure a política de CORS aqui
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowSpecificOrigin",
+            builder =>
+            {
+                builder.WithOrigins("http://192.168.0.170:3000") // Substitua pela origem do seu aplicativo React Native
+                       .AllowAnyOrigin();
+            });
+    });
 
 }

@@ -34,7 +34,5 @@ export const SearchButton = styled.TouchableOpacity`
 `;
 
 export const ListaCervejas = styled.FlatList`
-    height: 250px;
-    padding: 0 14px;
-    color: white;
+   
 `;

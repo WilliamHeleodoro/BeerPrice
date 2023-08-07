@@ -1,17 +1,21 @@
 import React from "react";
 
-import { Container, BannerItem, Title, RateContainer } from './styleCervejas';
+import { Container, BannerItem, Title } from "./styleCervejas";
 
-function ListaCervejas(){
-    return(
-        <Container>
-            <BannerItem
-                source={{uri: 'https://img.freepik.com/fotos-gratis/foto-de-grande-angular-de-uma-unica-arvore-crescendo-sob-um-ceu-nublado-durante-um-por-do-sol-cercado-por-grama_181624-22807.jpg?w=2000'}}
-            />
-            <Title>Floresta</Title>
-            <RateContainer></RateContainer>
-        </Container>
-    )
+
+function ListaCervejas({ data }) {
+  return (
+    <Container activeOpacity={0.7}>
+      <BannerItem
+        resizeMethod="resize"
+        source={{
+          uri: data.imagem,
+        }}
+      />
+      <Title numberOfLines={1}>{data.titulo}</Title>
+      <Title>{data.quantidade} Unidade: {data.unidade}</Title>
+    </Container>
+  );
 }
 
 export default ListaCervejas;
