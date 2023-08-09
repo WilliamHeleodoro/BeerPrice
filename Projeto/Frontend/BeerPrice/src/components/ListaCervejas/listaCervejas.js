@@ -3,10 +3,10 @@ import React from "react";
 import { Container, BannerItem, Title } from "./styleCervejas";
 
 
-function ListaCervejas({ data }) {
+function ListaCervejas({ data, navigatePage}) {
   return (
-    <Container activeOpacity={0.7}>
-      <BannerItem
+    <Container activeOpacity={0.7} onPress={() => navigatePage(data)}>
+      <BannerItem 
         resizeMethod="resize"
         source={{
           uri: data.imagem,

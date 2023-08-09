@@ -101,8 +101,7 @@ namespace WebScraping.Driver
                 //AJUSTAR UNIDADE
                 Match  unidade  = montarUnidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
                 Match unidades = montarUnidades.Match(unidade.Value); 
-                if(item.Titulo.Contains("12X350ml"))
-                    Console.WriteLine();
+ 
                 if (unidades.Value == "")
                 {
                     Match unidade2 = montarUnidade.Match(element.FindElement(By.ClassName("badge-mob")).Text);

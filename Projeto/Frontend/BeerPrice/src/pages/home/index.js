@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, ActivityIndicator } from "react-native";
+import { ActivityIndicator } from "react-native";
 
 import {
   Container,
@@ -15,6 +15,8 @@ import Cervejas from "../../components/ListaCervejas/listaCervejas";
 
 import api from "../../services/api";
 
+import { useNavigation } from "@react-navigation/native";
+
 function Home() {
   const filtro = {
     filtroCaracteristica: "",
@@ -24,8 +26,12 @@ function Home() {
     filtroQuantidade: "",
   };
 
+  
   const [loading, setLoading] = useState(true);
   const [cervejas, setCervejas] = useState([]);
+
+  const navigation = useNavigation();
+  
   useEffect(() => {
     const ac = new AbortController();
 
@@ -44,6 +50,10 @@ function Home() {
     setLoading(false);
   }, []);
 
+  function navigateDetailsPage(item){
+    navigation.navigate('Detail', {id: item.id})
+  }
+
   if (loading) {
     return (
       <Container>
@@ -61,15 +71,15 @@ function Home() {
           <Feather name="search" size={30} color="#FFF" />
         </SearchButton>
       </SearchContainer>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      
         <ListaCervejas
           numColumns={2}
           showsVerticalScrollIndicator={false}
           data={cervejas}
-          renderItem={({ item }) => <Cervejas data={item} />}
+          renderItem={({ item }) => <Cervejas data={item} navigatePage={ () => navigateDetailsPage(item) } />}
           keyExtractor={(item) => String(item.id)}
         />
-      </ScrollView>
+    
     </Container>
   );
 }
