@@ -66,7 +66,7 @@ function Home() {
       <Header title="Cátalogo de Cervejas" />
 
       <SearchContainer>
-        <Input placeholder="Marca da Cerveja" placeholderTextColor="#ddd" />
+        <Input placeholder="Marca da Cerveja" placeholderTextColor="#fff"/>
         <SearchButton>
           <Feather name="search" size={30} color="#FFF" />
         </SearchButton>

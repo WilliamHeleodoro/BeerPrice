@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import fonts from '../../styles/fonts';
 
 
 export const Container = styled.TouchableOpacity`
@@ -19,7 +20,7 @@ export const BannerItem = styled.Image`
 export const Title = styled.Text`
     color: #fff;
     text-align: center;
-    font-weight: bold;
-    font-size: 11px
+    font-size: 11px;
+    font-family: ${fonts.fonts.outros};
 `;
 

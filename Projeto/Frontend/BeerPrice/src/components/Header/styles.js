@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import fonts from '../../styles/fonts';
 
 export const Container = styled.View`
     height: 70px;
@@ -10,5 +11,5 @@ export const Container = styled.View`
 export const Title = styled.Text`
     color: #fff;
     font-size: 30px;
-    font-weight: bold;
+    font-family: ${fonts.fonts.titulo};
 `;

@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Container, Header, HeaderButton, Banner, Title } from "./styles";
+import {
+  Container,
+  Header,
+  HeaderButton,
+  Banner,
+  Title,
+  View,
+  Precos,
+  InfoProduto,
+} from "./styles";
 
 import { ActivityIndicator } from "react-native";
 
@@ -7,6 +16,10 @@ import { Feather } from "@expo/vector-icons";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import api from "../../services/api";
+
+import ListaPrecos from "../../components/ListaPrecos/listaPrecos";
+
+import { Text } from "react-native-paper";
 
 function Detail() {
   const navigation = useNavigation();
@@ -45,9 +58,27 @@ function Detail() {
         <HeaderButton activeOpacity={0.7} onPress={() => navigation.goBack()}>
           <Feather name="arrow-left" size={28} color="#fff" />
         </HeaderButton>
-        <Title>{itemCerveja.titulo}</Title>
+        <Title>Cerveja</Title>
       </Header>
-      <Banner resizeMethod="resize" source={{ uri: itemCerveja.imagem }} />
+      <View>
+        <Banner resizeMethod="resize" source={{ uri: itemCerveja.imagem }} />
+        <Precos
+          showsVerticalScrollIndicator={false}
+          data={itemCerveja.maiorPreco}
+          renderItem={({ item }) => <ListaPrecos data={item} />}
+        />
+      </View>
+      <InfoProduto>
+        <Text
+          variant="labelLarge"
+          style={{
+            color: "#fff",
+            fontSize: 14,
+          }}
+        >
+          Cerveja Lager Brahma Duplo Malte
+        </Text>
+      </InfoProduto>
     </Container>
   );
 }

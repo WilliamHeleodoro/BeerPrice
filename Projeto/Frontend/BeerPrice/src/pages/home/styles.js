@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import fonts from '../../styles/fonts';
 
 export const Container = styled.SafeAreaView`
     background-color: #141a29;
@@ -21,8 +22,10 @@ export const Input = styled.TextInput`
     height: 50px;
     border-radius: 50px;
     padding: 8px 15px;
-    font-size: 18px;
+    font-size: 14px;
     color: #fff;
+    font-family: ${fonts.fonts.placeHolder};
+    
 `;
 
 export const SearchButton = styled.TouchableOpacity`
@@ -32,6 +35,7 @@ export const SearchButton = styled.TouchableOpacity`
     justify-content: center;
     
 `;
+
 
 export const ListaCervejas = styled.FlatList`
    
