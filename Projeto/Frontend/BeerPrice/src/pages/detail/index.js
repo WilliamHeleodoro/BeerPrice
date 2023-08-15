@@ -19,7 +19,7 @@ import api from "../../services/api";
 
 import ListaPrecos from "../../components/ListaPrecos/listaPrecos";
 
-import { Text } from "react-native-paper";
+import DetalhesCerveja from "../../components/DetalhesCerveja/detalhesCerveja";
 
 function Detail() {
   const navigation = useNavigation();
@@ -69,15 +69,11 @@ function Detail() {
         />
       </View>
       <InfoProduto>
-        <Text
-          variant="labelLarge"
-          style={{
-            color: "#fff",
-            fontSize: 14,
-          }}
-        >
-          Cerveja Lager Brahma Duplo Malte
-        </Text>
+        <DetalhesCerveja
+          texto={itemCerveja.titulo}
+          quantidade={itemCerveja.quantidade}
+          unidade={itemCerveja.unidade}
+        />
       </InfoProduto>
     </Container>
   );

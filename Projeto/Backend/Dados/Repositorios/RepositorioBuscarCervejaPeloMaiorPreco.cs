@@ -18,7 +18,7 @@ namespace Dados.Repositorios
 
         public List<CervejaPorCodigoDTO> BuscarCervejaPorCodigo(long codigoCerveja)
         {
-            var sql = @"SELECT TITULO, IMAGEM FROM ITEM
+            var sql = @"SELECT TITULO, IMAGEM, QUANTIDADE, UNIDADE FROM ITEM
                          WHERE ID = @codigoCerveja";
 
 
@@ -34,17 +34,17 @@ namespace Dados.Repositorios
         public List<CervejaMaiorPrecoDTO> BuscarCervejaPreco(long codigoCerveja)
         {
             var sql = @"WITH ITEM_QUERY AS (
-                          SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO
+                          SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE
                           FROM ITEM
                           WHERE ITEM.ID = @codigoCerveja
                         )
                         SELECT 
-                            MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO
+                            MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE
                         FROM (
-                                SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO
+                                SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE
                                 FROM ITEM_QUERY
                                 UNION
-                                SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO
+                                SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE
                                 FROM ITEM ITENS 
                                 WHERE (ITENS.TIPO, ITENS.MARCA, ITENS.CARACTERISTICA, ITENS.QUANTIDADE, ITENS.UNIDADE)
                                     = (SELECT TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE FROM ITEM_QUERY)

@@ -15,6 +15,6 @@ namespace Dados.DTO
         public string Quantidade { get; set; } = "";
         public int Unidade { get; set; }
         public decimal Preco { get; set; }
-
+        public string Ecommerce { get; set; } = "";
     }
 }

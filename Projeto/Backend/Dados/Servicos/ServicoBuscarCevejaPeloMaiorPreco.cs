@@ -33,7 +33,8 @@ namespace Dados.Servicos
             {
                 cervejaPorCodigoDTO.Titulo = cerveja.Titulo;
                 cervejaPorCodigoDTO.Imagem = cerveja.Imagem;
-
+                cervejaPorCodigoDTO.Quantidade = cerveja.Quantidade;
+                cervejaPorCodigoDTO.Unidade = cerveja.Unidade;
             }
 
             var MaiorPreco = _repositorioBuscarCervejaPeloMaiorPreco.BuscarCervejaPreco(codigoCerveja);

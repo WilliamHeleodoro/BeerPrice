@@ -12,10 +12,10 @@ namespace Dados.Repositorios
     {
         Conexao conexao = new Conexao();
         public void InserirItem(int id, string mercado, string tipo, string marca, string caracteristica, string titulo,
-            decimal preco, int unidade, string quantidade, string imagem)
+            decimal preco, int unidade, string quantidade, string imagem, string ecommerce, DateTime dataAtualizacao)
         {
-            var sql = "INSERT INTO ITEM (id, mercado, tipo, marca, caracteristica, titulo, preco, unidade, quantidade, imagem) " +
-                "VALUES (@id, @mercado, @tipo, @marca, @caracteristica, @titulo, @preco, @unidade, @quantidade, @imagem)";
+            var sql = "INSERT INTO ITEM (id, mercado, tipo, marca, caracteristica, titulo, preco, unidade, quantidade, imagem, ecommerce, dataAtualizacao) " +
+                "VALUES (@id, @mercado, @tipo, @marca, @caracteristica, @titulo, @preco, @unidade, @quantidade, @imagem, @ecommerce, @dataAtualizacao)";
 
             var parametros = new Dictionary<string, object> {
                 { "@id", id },
@@ -27,8 +27,9 @@ namespace Dados.Repositorios
                 { "@preco", preco },
                 { "@unidade", unidade },
                 { "@quantidade", quantidade },
-                { "@imagem", imagem }};
-
+                { "@imagem", imagem },
+                { "@ecommerce", ecommerce },
+                { "@dataAtualizacao", dataAtualizacao } };
 
             conexao.ConexaoPostgres().Execute(sql, parametros);
             conexao.ConexaoPostgres().Close();

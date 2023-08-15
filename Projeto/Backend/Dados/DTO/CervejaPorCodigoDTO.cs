@@ -10,6 +10,8 @@ namespace Dados.DTO
     {
         public string Titulo { get; set; } = "";
         public string Imagem { get; set; } = "";
+        public string Quantidade { get; set; } = "";
+        public int Unidade { get; set; }
         public List<CervejaMaiorPrecoDTO> MaiorPreco { get; set; } = new();
     }
 }

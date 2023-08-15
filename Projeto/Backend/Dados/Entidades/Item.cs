@@ -1,4 +1,5 @@
-﻿using System;
+﻿using java.sql;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -41,6 +42,12 @@ namespace WebScraping.Model
 
         [Column("imagem")]
         public string Imagem { get; set; } = "";
+        
+        [Column("ecommerce")]
+        public string Ecommerce { get; set; } = "";
+
+        [Column("dataAtualizacao")]
+        public DateTime DataAtualizacao { get; set; } = DateTime.MinValue;
 
     }
 }

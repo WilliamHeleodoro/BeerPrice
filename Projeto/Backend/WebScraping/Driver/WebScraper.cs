@@ -172,6 +172,13 @@ namespace WebScraping.Driver
 
                 }
 
+                //ECOMMERCE
+                var ecommerce = element.FindElement(By.ClassName("list-product-link"));
+                item.Ecommerce = ecommerce.GetAttribute("href");
+                
+                //DATA ATUALIZAÇÃO
+                item.DataAtualizacao = DateTime.Now;
+
                 //TITULO
                 var titulo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
 
@@ -330,6 +337,13 @@ namespace WebScraping.Driver
 
                 }
 
+                //ECOMMERCE
+                var ecommerce = element.FindElement(By.ClassName("ghost-link"));
+                item.Ecommerce = ecommerce.GetAttribute("href");
+
+                //DATA ATUALIZAÇÃO
+                item.DataAtualizacao = DateTime.Now;
+
                 //TITULO
                 var titulo = element.FindElement(By.ClassName("description")).Text;
 
@@ -368,7 +382,7 @@ namespace WebScraping.Driver
             {
                 id++;
                 repositorio.InserirItem(id, item.Mercado, item.Tipo, item.Marca, item.Caracteristica,
-                    item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem);
+                    item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem, item.Ecommerce, item.DataAtualizacao);
             }
 
         }
