@@ -37,5 +37,21 @@ namespace Dados.Controller
 
             return Ok(resultado);
         }
+
+        [HttpGet("historico/{codigo:long}")]
+        public ActionResult BuscarHistoricoPrecos(long codigo,
+            [FromServices] ServicoBuscarHistoricoPrecos servicoBuscarHistoricoPrecos,
+            [FromQuery] FiltroObterHistorico filtros)
+            
+        {
+            var resultado = servicoBuscarHistoricoPrecos.BuscarCervejaPreco(codigo, filtros);
+
+            if (resultado == null)
+            {
+                return BadRequest("Produto não existe"); // Retorna HTTP 400 - Bad Request
+            }
+
+            return Ok(resultado);
+        }
     }
 }

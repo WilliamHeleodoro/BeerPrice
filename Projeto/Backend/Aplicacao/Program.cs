@@ -37,6 +37,8 @@ void ConfigureServices(WebApplicationBuilder builder)
     builder.Services.AddScoped<RepositorioBuscarCervejas>();
     builder.Services.AddScoped<ServicoBuscarCevejaPeloMaiorPreco>();
     builder.Services.AddScoped<RepositorioBuscarCervejaPeloMaiorPreco>();
+    builder.Services.AddScoped<ServicoBuscarHistoricoPrecos>();
+    builder.Services.AddScoped<RepositorioBuscarHistoricoPrecos>();
 
     // Configure a política de CORS aqui
     builder.Services.AddCors(options =>

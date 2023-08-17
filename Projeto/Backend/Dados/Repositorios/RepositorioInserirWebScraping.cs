@@ -11,14 +11,13 @@ namespace Dados.Repositorios
     public class RepositorioInserirWebScraping
     {
         Conexao conexao = new Conexao();
-        public void InserirItem(int id, string mercado, string tipo, string marca, string caracteristica, string titulo,
+        public void InserirItem(string mercado, string tipo, string marca, string caracteristica, string titulo,
             decimal preco, int unidade, string quantidade, string imagem, string ecommerce, DateTime dataAtualizacao)
         {
-            var sql = "INSERT INTO ITEM (id, mercado, tipo, marca, caracteristica, titulo, preco, unidade, quantidade, imagem, ecommerce, dataAtualizacao) " +
-                "VALUES (@id, @mercado, @tipo, @marca, @caracteristica, @titulo, @preco, @unidade, @quantidade, @imagem, @ecommerce, @dataAtualizacao)";
+            var sql = "INSERT INTO ITEM (mercado, tipo, marca, caracteristica, titulo, preco, unidade, quantidade, imagem, ecommerce, dataAtualizacao) " +
+                "VALUES (@mercado, @tipo, @marca, @caracteristica, @titulo, @preco, @unidade, @quantidade, @imagem, @ecommerce, @dataAtualizacao)";
 
             var parametros = new Dictionary<string, object> {
-                { "@id", id },
                 { "@mercado", mercado },
                 { "@tipo", tipo },
                 { "@marca", marca },

@@ -51,7 +51,7 @@ export const Precos = styled.FlatList``;
 export const InfoProduto = styled.View`
   margin-top: 25%;
   align-items: left;
-  margin-left: 10px;
+  margin-left: 1px;
   padding-right: 15px;
   border-radius: 8px;
   padding: 15px;
@@ -67,5 +67,6 @@ export const InfoText = styled.Text`
   font-size: 14px;
   
 `;
+
 
 

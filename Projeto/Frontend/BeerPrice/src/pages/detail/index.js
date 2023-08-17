@@ -15,11 +15,27 @@ import { ActivityIndicator } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import api from "../../services/api";
 
 import ListaPrecos from "../../components/ListaPrecos/listaPrecos";
 
 import DetalhesCerveja from "../../components/DetalhesCerveja/detalhesCerveja";
+
+import { LineChart } from "react-native-svg-charts";
+import * as shape from "d3-shape";
+
+import {
+  Markers,
+  Labels,
+} from "../../components/ComponentesGraficos/ChartComponents";
+
+import FiltroGrafico from "../../components/FiltroGrafico/filtroGrafico";
+
+import {
+  getCervejaDetalhes,
+  getHistoricoPreco,
+} from "../../services/apiCervejas";
+
+import { Text } from "react-native-paper";
 
 function Detail() {
   const navigation = useNavigation();
@@ -27,23 +43,49 @@ function Detail() {
 
   const [loading, setLoading] = useState(true);
   const [itemCerveja, setItemCerveja] = useState([]);
+  const [historicoPreco, setHistoricoPreco] = useState([]);
+  const [selected, setSelected] = useState(0);
 
   useEffect(() => {
-    const ac = new AbortController();
-
-    api
-      .get(`/cervejas/${route.params?.id}`)
-      .then((response) => {
-        setItemCerveja(response.data);
-      })
-      .catch((err) => {
-        console.error(
-          "ops! ocorreu um erro : " + err + " " + err.response.data
-        );
-        ac.abort();
-      });
-    setLoading(false);
+    if (route.params?.id) {
+      getCervejaDetalhes(route.params.id)
+        .then((response) => {
+          setItemCerveja(response.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(
+            "ops! ocorreu um erro : " + err + " " + err.response.data
+          );
+        });
+      setLoading(false);
+    }
   }, []);
+
+  const itens = itemCerveja.maiorPreco || [];
+  const mercados = itens.map((item) => item.mercado);
+  const nomeMercado = mercados[selected];
+  const [nomeDoMercadoSelecionado, setNomeDoMercadoSelecionado] = useState("");
+
+  useEffect(() => {
+    setNomeDoMercadoSelecionado(nomeMercado);
+  });
+  
+  useEffect(() => {
+    if (nomeDoMercadoSelecionado !== "") {
+      getHistoricoPreco(route.params?.id, nomeDoMercadoSelecionado)
+        .then((response) => {
+          setHistoricoPreco(response.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(
+            "ops! ocorreu um erro : " + err + " " + err.response.data
+          );
+        });
+      setLoading(false);
+    }
+  }, [nomeDoMercadoSelecionado]);
 
   if (loading) {
     return (
@@ -75,6 +117,38 @@ function Detail() {
           unidade={itemCerveja.unidade}
         />
       </InfoProduto>
+      <Text
+        variant="labelLarge"
+        style={{
+          color: "#fff",
+          fontSize: 18,
+          marginTop: 12,
+          marginLeft: 15,
+          fontWeight: 'bold'
+        }}
+      >
+        Histórico do item por Mercado
+      </Text>
+      <FiltroGrafico
+        selected={selected}
+        options={mercados}
+        horizontal={true}
+        onChangeSelect={(opt, i) => {
+          setSelected(i);
+          setNomeDoMercadoSelecionado(mercados[i]);
+        }}
+      />
+
+      <LineChart
+        style={{ height: 200 }}
+        data={historicoPreco.map((item) => item.preco)}
+        svg={{ stroke: "rgb(134, 65, 244)", strokeWidth: 1.8 }}
+        contentInset={{ top: 40, bottom: 40, right: 25, left: 25 }}
+        curve={shape.curveMonotoneX}
+      >
+        <Markers />
+        <Labels />
+      </LineChart>
     </Container>
   );
 }

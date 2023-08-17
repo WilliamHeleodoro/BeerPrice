@@ -20,8 +20,8 @@ function ListaPrecos({ data }) {
             fontSize: 13,
           }} // Defina a cor para a descrição
           left={(props) => (
-            <TouchableRipple onPress={() => Linking.openURL(data.ecommerce)}>
-              <List.Icon {...props} icon="cart" color="#FFF" />
+            <TouchableRipple onPress={() => Linking.openURL(data.ecommerce)} activeOpacity={2} >
+              <List.Icon {...props} icon="cart" color="#FFF"/>
             </TouchableRipple>
           )}
         />

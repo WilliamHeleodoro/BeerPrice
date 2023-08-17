@@ -34,22 +34,30 @@ namespace Dados.Repositorios
         public List<CervejaMaiorPrecoDTO> BuscarCervejaPreco(long codigoCerveja)
         {
             var sql = @"WITH ITEM_QUERY AS (
-                          SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE
-                          FROM ITEM
-                          WHERE ITEM.ID = @codigoCerveja
+                            SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE, DATAATUALIZACAO
+                            FROM ITEM
+                            WHERE ITEM.ID = @codigoCerveja
                         )
                         SELECT 
-                            MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE
+                            MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE,
+                            PRECO, ECOMMERCE, DATAATUALIZACAO
                         FROM (
-                                SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE
+                            SELECT 
+                                MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE,
+                                PRECO, ECOMMERCE, DATAATUALIZACAO,
+                                ROW_NUMBER() OVER (PARTITION BY MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, ECOMMERCE ORDER BY DATAATUALIZACAO DESC) AS RN
+                            FROM (
+                                SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE, DATAATUALIZACAO
                                 FROM ITEM_QUERY
                                 UNION
-                                SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE
+                                SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE, DATAATUALIZACAO
                                 FROM ITEM ITENS 
                                 WHERE (ITENS.TIPO, ITENS.MARCA, ITENS.CARACTERISTICA, ITENS.QUANTIDADE, ITENS.UNIDADE)
-                                    = (SELECT TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE FROM ITEM_QUERY)
-                        ) AS COMBINED_RESULTS
-                        ORDER BY PRECO";
+                                    IN (SELECT TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE FROM ITEM_QUERY)
+                            ) AS COMBINED_RESULTS
+                        ) AS NUMBERED_RESULTS
+                        WHERE RN = 1
+                        ORDER BY PRECO;";
 
 
             var parametros = new Dictionary<string, object> { { "@codigoCerveja", codigoCerveja } };

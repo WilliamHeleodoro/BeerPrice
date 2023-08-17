@@ -374,14 +374,14 @@ namespace WebScraping.Driver
         {     
             RepositorioInserirWebScraping repositorio = new RepositorioInserirWebScraping();
 
-            repositorio.DeletarItens();
+            //repositorio.DeletarItens();
 
-            int id = 0;
+      
 
             foreach (var item in items)
             {
-                id++;
-                repositorio.InserirItem(id, item.Mercado, item.Tipo, item.Marca, item.Caracteristica,
+                
+                repositorio.InserirItem(item.Mercado, item.Tipo, item.Marca, item.Caracteristica,
                     item.Titulo, item.Preco, item.Unidade, item.Quantidade, item.Imagem, item.Ecommerce, item.DataAtualizacao);
             }
 
