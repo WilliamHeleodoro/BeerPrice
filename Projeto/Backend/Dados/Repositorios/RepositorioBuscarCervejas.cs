@@ -34,33 +34,12 @@ namespace Dados.Repositorios
                         		LIMIT 1 
                         	)
                         FROM ITEM
-                        WHERE 1=1 ";
+                        WHERE 1=1";
 
-            if (!string.IsNullOrEmpty(filtros?.filtroCaracteristica))
+            if (!string.IsNullOrEmpty(filtros?.filtroGeral))
             {
-                filtros.filtroCaracteristica = "%" + filtros.filtroCaracteristica + "%";
-                sql += "AND ITEM.CARACTERISTICA like @filtroCaracteristica ";
-            }
-
-            if (!string.IsNullOrEmpty(filtros?.filtroTipo))
-            {
-                filtros.filtroTipo = "%" + filtros.filtroTipo + "%";
-                sql += "AND ITEM.TIPO like @filtroTipo ";
-            }
-
-            if (filtros?.filtroUnidade != 0)
-                sql += "AND ITEM.UNIDADE = @filtroUnidade ";
-
-            if (!string.IsNullOrEmpty(filtros?.filtroMarca))
-            {
-                filtros.filtroMarca = "%" + filtros.filtroMarca + "%";
-                sql += "AND ITEM.MARCA like @filtroMarca ";
-            }
-
-            if (!string.IsNullOrEmpty(filtros?.filtroQuantidade))
-            {
-                filtros.filtroQuantidade = "%" + filtros.filtroQuantidade + "%";
-                sql += "AND ITEM.QUANTIDADE like @filtroQuantidade ";
+                filtros.filtroGeral = "%" + filtros.filtroGeral + "%";
+                sql += " AND (MARCA ILIKE @filtroGeral OR CARACTERISTICA ILIKE @filtroGeral OR TIPO ILIKE @filtroGeral)";
             }
 
             var cervejas = conexao.ConexaoPostgres().Query<CervejaDTO>(sql, filtros).ToList();

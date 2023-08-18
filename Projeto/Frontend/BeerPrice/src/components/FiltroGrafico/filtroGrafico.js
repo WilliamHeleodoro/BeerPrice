@@ -18,7 +18,14 @@ const Radio = ({
           <View style={styles.outlineCircle}>
             {selected === index && <View style={styles.innerCircle} />}
           </View>
-          <Text style={{ color: selected === index ? '#fff': '#777', padding: 4 }}>{opt}</Text>
+          <Text
+            style={{
+              color: selected === index ? "#fff" : "#777",
+              padding: "2%",
+            }}
+          >
+            {opt}
+          </Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -27,8 +34,6 @@ const Radio = ({
 
 const styles = StyleSheet.create({
   horizontal: {
-    padding: 8,
-    marginLeft: 1,
     marginTop: 8,
     flexDirection: "row",
     alignItems: "center",
@@ -37,7 +42,7 @@ const styles = StyleSheet.create({
   optContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 8,
+    padding: "2%",
   },
   outlineCircle: {
     width: 20,
@@ -47,7 +52,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     justifyContent: "center",
     alignItems: "center",
-    
   },
   innerCircle: {
     width: 10,

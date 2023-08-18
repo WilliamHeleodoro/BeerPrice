@@ -8,11 +8,11 @@ import {
   View,
   Precos,
   InfoProduto,
+  Grafico,
+  DetalhesGrafico,
 } from "./styles";
 
 import { ActivityIndicator } from "react-native";
-
-import { Feather } from "@expo/vector-icons";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -36,6 +36,8 @@ import {
 } from "../../services/apiCervejas";
 
 import { Text } from "react-native-paper";
+
+import { Feather } from "react-native-vector-icons";
 
 function Detail() {
   const navigation = useNavigation();
@@ -70,7 +72,7 @@ function Detail() {
   useEffect(() => {
     setNomeDoMercadoSelecionado(nomeMercado);
   });
-  
+
   useEffect(() => {
     if (nomeDoMercadoSelecionado !== "") {
       getHistoricoPreco(route.params?.id, nomeDoMercadoSelecionado)
@@ -117,38 +119,49 @@ function Detail() {
           unidade={itemCerveja.unidade}
         />
       </InfoProduto>
-      <Text
-        variant="labelLarge"
-        style={{
-          color: "#fff",
-          fontSize: 18,
-          marginTop: 12,
-          marginLeft: 15,
-          fontWeight: 'bold'
-        }}
-      >
-        Histórico do item por Mercado
-      </Text>
-      <FiltroGrafico
-        selected={selected}
-        options={mercados}
-        horizontal={true}
-        onChangeSelect={(opt, i) => {
-          setSelected(i);
-          setNomeDoMercadoSelecionado(mercados[i]);
-        }}
-      />
+      <Grafico>
+        <DetalhesGrafico>
+          <Feather
+            name="bar-chart"
+            size={30}
+            color={"#fff"}
+            marginTop={"1%"}
+            marginLeft={"3%"}
+          />
+          <Text
+            variant="labelLarge"
+            style={{
+              color: "#fff",
+              fontSize: 18,
+              marginTop: "3%",
+              marginLeft: 15,
+              fontWeight: "bold",
+            }}
+          >
+            Histórico do item por Mercado
+          </Text>
+        </DetalhesGrafico>
+        <FiltroGrafico
+          selected={selected}
+          options={mercados}
+          horizontal={true}
+          onChangeSelect={(opt, i) => {
+            setSelected(i);
+            setNomeDoMercadoSelecionado(mercados[i]);
+          }}
+        />
 
-      <LineChart
-        style={{ height: 200 }}
-        data={historicoPreco.map((item) => item.preco)}
-        svg={{ stroke: "rgb(134, 65, 244)", strokeWidth: 1.8 }}
-        contentInset={{ top: 40, bottom: 40, right: 25, left: 25 }}
-        curve={shape.curveMonotoneX}
-      >
-        <Markers />
-        <Labels />
-      </LineChart>
+        <LineChart
+          style={{ flex: 1}}
+          data={historicoPreco.map((item) => item.preco)}
+          svg={{ stroke: "rgb(134, 65, 244)", strokeWidth: 1.8 }}
+          contentInset={{ top: 40, bottom: 40, right: 30, left: 30}}
+          curve={shape.curveMonotoneX}
+        >
+          <Markers />
+          <Labels />
+        </LineChart>
+      </Grafico>
     </Container>
   );
 }

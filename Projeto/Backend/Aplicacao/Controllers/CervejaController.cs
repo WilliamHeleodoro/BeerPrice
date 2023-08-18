@@ -9,9 +9,9 @@ namespace Dados.Controller
     [Route("cervejas")]
     public class CervejaController : ControllerBase
     {
-        [HttpPost]
+        [HttpGet]
         public ActionResult BuscarListaCervejas([FromServices] ServicoBuscarCervejas servicoBuscarCervejas,
-            [FromBody] FiltroObterCerveja filtroObterCerveja
+            [FromQuery] FiltroObterCerveja filtroObterCerveja
             )
         {
             var resultado = servicoBuscarCervejas.BuscarCervejas(filtroObterCerveja);

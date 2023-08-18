@@ -13,45 +13,45 @@ import { Feather } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import Cervejas from "../../components/ListaCervejas/listaCervejas";
 
-import api from "../../services/api";
+import { getCervejas } from "../../services/apiCervejas";
 
 import { useNavigation } from "@react-navigation/native";
 
-function Home() {
-  const filtro = {
-    filtroCaracteristica: "",
-    filtroTipo: "",
-    filtroUnidade: 0,
-    filtroMarca: "",
-    filtroQuantidade: "",
-  };
+import { ToastContainer, toast } from "react-native-toast-message";
 
-  
+function Home() {
+  const [resultadoFiltro, setResultadoFiltro] = useState("");
   const [loading, setLoading] = useState(true);
   const [cervejas, setCervejas] = useState([]);
 
   const navigation = useNavigation();
-  
-  useEffect(() => {
-    const ac = new AbortController();
 
-    api
-      .post("/cervejas", filtro)
+  const fetchCervejas = (filtro) => {
+    setLoading(true);
+
+    getCervejas({ filtroGeral: filtro })
       .then((response) => {
         setCervejas(response.data);
       })
       .catch((err) => {
-        console.error(
-          "ops! ocorreu um erro : " + err + " " + err.response.data
-        );
-        ac.abort();
+        console.error("Ops! Ocorreu um erro:", err, err.response.data);
+      })
+      .finally(() => {
+        setLoading(false);
       });
+  };
 
-    setLoading(false);
+  const handleSearchButtonPress = () => {
+    fetchCervejas(resultadoFiltro);
+  };
+
+  // Chamada inicial quando a página é carregada
+  useEffect(() => {
+    fetchCervejas(resultadoFiltro);
   }, []);
 
-  function navigateDetailsPage(item){
-    navigation.navigate('Detail', {id: item.id})
+  function navigateDetailsPage(item) {
+    navigation.navigate("Detail", { id: item.id });
   }
 
   if (loading) {
@@ -66,20 +66,29 @@ function Home() {
       <Header title="Cátalogo de Cervejas" />
 
       <SearchContainer>
-        <Input placeholder="Marca da Cerveja" placeholderTextColor="#fff"/>
-        <SearchButton>
+        <Input
+          placeholder="Marca da Cerveja"
+          placeholderTextColor="#fff"
+          value={resultadoFiltro}
+          onChangeText={setResultadoFiltro}
+        />
+        <SearchButton onPress={handleSearchButtonPress}>
           <Feather name="search" size={30} color="#FFF" />
         </SearchButton>
       </SearchContainer>
-      
-        <ListaCervejas
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          data={cervejas}
-          renderItem={({ item }) => <Cervejas data={item} navigatePage={ () => navigateDetailsPage(item) } />}
-          keyExtractor={(item) => String(item.id)}
-        />
-    
+
+      <ListaCervejas
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+        data={cervejas}
+        renderItem={({ item }) => (
+          <Cervejas
+            data={item}
+            navigatePage={() => navigateDetailsPage(item)}
+          />
+        )}
+        keyExtractor={(item) => String(item.id)}
+      />
     </Container>
   );
 }

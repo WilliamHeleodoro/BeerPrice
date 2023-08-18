@@ -1,5 +1,11 @@
 import api from "./api";
 
+export function getCervejas(filtroGeral) {
+  return api.get(`/cervejas`, {
+    params: filtroGeral
+  });
+}
+
 export function getCervejaDetalhes(id) {
   return api.get(`/cervejas/${id}`);
 }
