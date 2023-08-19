@@ -25,6 +25,7 @@ function ListaPrecos({ data }) {
               <List.Icon {...props} icon="cart" color="#FFF" style={{ marginTop: 'auto', marginBottom: 'auto', paddingLeft: "15%" }} />
             </TouchableRipple>
           )}
+          
         />
       </View>
     </Container>

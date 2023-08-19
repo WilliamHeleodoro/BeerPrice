@@ -17,7 +17,7 @@ import { getCervejas } from "../../services/apiCervejas";
 
 import { useNavigation } from "@react-navigation/native";
 
-import { ToastContainer, toast } from "react-native-toast-message";
+import  Toast  from "react-native-toast-message";
 
 function Home() {
   const [resultadoFiltro, setResultadoFiltro] = useState("");
@@ -33,8 +33,13 @@ function Home() {
       .then((response) => {
         setCervejas(response.data);
       })
-      .catch((err) => {
+      .catch((err )=> {
         console.error("Ops! Ocorreu um erro:", err, err.response.data);
+        Toast.show({
+          type: 'error',
+          text1: err.response.data
+        });
+        
       })
       .finally(() => {
         setLoading(false);
@@ -42,12 +47,12 @@ function Home() {
   };
 
   const handleSearchButtonPress = () => {
-    fetchCervejas(resultadoFiltro);
+    fetchCervejas(resultadoFiltro.trim());
   };
 
   // Chamada inicial quando a página é carregada
   useEffect(() => {
-    fetchCervejas(resultadoFiltro);
+    fetchCervejas(resultadoFiltro.trim());
   }, []);
 
   function navigateDetailsPage(item) {

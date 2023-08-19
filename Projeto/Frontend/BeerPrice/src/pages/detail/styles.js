@@ -1,6 +1,7 @@
 import { styled } from "styled-components/native";
 import fonts from "../../styles/fonts";
 
+
 export const Container = styled.View`
   flex: 1;
   background-color: #191a30;
@@ -36,8 +37,7 @@ export const Banner = styled.Image`
 `;
 
 export const View = styled.View`
- 
-  flex: 1;
+  height: 218px;
   top: 22%;
   flex-direction: row;
   margin-left: 3%;

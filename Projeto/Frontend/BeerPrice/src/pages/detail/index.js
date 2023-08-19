@@ -50,17 +50,21 @@ function Detail() {
 
   useEffect(() => {
     if (route.params?.id) {
+      setLoading(true);
       getCervejaDetalhes(route.params.id)
         .then((response) => {
           setItemCerveja(response.data);
-          setLoading(false);
         })
         .catch((err) => {
-          console.error(
-            "ops! ocorreu um erro : " + err + " " + err.response.data
-          );
+          console.error("Ops! Ocorreu um erro:", err, err.response.data);
+          Toast.show({
+            type: "error",
+            text1: err.response.data,
+          });
+        })
+        .finally(() => {
+          setLoading(false);
         });
-      setLoading(false);
     }
   }, []);
 
@@ -152,10 +156,10 @@ function Detail() {
         />
 
         <LineChart
-          style={{ flex: 1}}
+          style={{ flex: 2 }}
           data={historicoPreco.map((item) => item.preco)}
           svg={{ stroke: "rgb(134, 65, 244)", strokeWidth: 1.8 }}
-          contentInset={{ top: 40, bottom: 40, right: 30, left: 30}}
+          contentInset={{ top: 40, bottom: 40, right: 30, left: 30 }}
           curve={shape.curveMonotoneX}
         >
           <Markers />
