@@ -1,11 +1,9 @@
 import { styled } from "styled-components/native";
 import fonts from "../../styles/fonts";
 
-
 export const Container = styled.View`
   flex: 1;
   background-color: #191a30;
-
 `;
 
 export const Title = styled.Text`
@@ -28,6 +26,20 @@ export const HeaderButton = styled.TouchableOpacity`
   width: 12%;
   background-color: rgba(25, 26, 48, 0.8);
   margin-top: 0.5%;
+`;
+
+export const ContainerAtualizacao = styled.View`
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  margin-top: 2%;
+  right: 2%;
+`;
+
+export const Atualizado = styled.Text`
+  font-size: 11px;
+  color: #a9a9a9;
+  
 `;
 
 export const Banner = styled.Image`

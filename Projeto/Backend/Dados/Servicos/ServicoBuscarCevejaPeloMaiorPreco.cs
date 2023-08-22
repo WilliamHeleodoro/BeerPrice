@@ -28,13 +28,14 @@ namespace Dados.Servicos
          
 
             var resultado = _repositorioBuscarCervejaPeloMaiorPreco.BuscarCervejaPorCodigo(codigoCerveja);
-
+       
             foreach (var cerveja in resultado)
             {
                 cervejaPorCodigoDTO.Titulo = cerveja.Titulo;
                 cervejaPorCodigoDTO.Imagem = cerveja.Imagem;
                 cervejaPorCodigoDTO.Quantidade = cerveja.Quantidade;
                 cervejaPorCodigoDTO.Unidade = cerveja.Unidade;
+                cervejaPorCodigoDTO.DataAtualizacao = cerveja.DataAtualizacao;
             }
 
             var MaiorPreco = _repositorioBuscarCervejaPeloMaiorPreco.BuscarCervejaPreco(codigoCerveja);

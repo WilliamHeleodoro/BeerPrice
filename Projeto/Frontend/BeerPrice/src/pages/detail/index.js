@@ -10,6 +10,8 @@ import {
   InfoProduto,
   Grafico,
   DetalhesGrafico,
+  Atualizado,
+  ContainerAtualizacao,
 } from "./styles";
 
 import { ActivityIndicator } from "react-native";
@@ -107,7 +109,17 @@ function Detail() {
           <Feather name="arrow-left" size={28} color="#fff" />
         </HeaderButton>
         <Title>Cerveja</Title>
+        <ContainerAtualizacao>
+        <Feather
+          name="clock"
+          size={14}
+          color={"#a9a9a9"}
+          style={{ marginRight: 5 }}
+        />
+        <Atualizado>{itemCerveja.dataAtualizacao}</Atualizado>
+      </ContainerAtualizacao>
       </Header>
+      
       <View>
         <Banner resizeMethod="resize" source={{ uri: itemCerveja.imagem }} />
         <Precos

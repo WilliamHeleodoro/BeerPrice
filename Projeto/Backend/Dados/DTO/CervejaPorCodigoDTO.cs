@@ -12,6 +12,7 @@ namespace Dados.DTO
         public string Imagem { get; set; } = "";
         public string Quantidade { get; set; } = "";
         public int Unidade { get; set; }
+        public string DataAtualizacao { get; set; } = "";
         public List<CervejaMaiorPrecoDTO> MaiorPreco { get; set; } = new();
     }
 }

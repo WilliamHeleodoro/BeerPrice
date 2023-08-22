@@ -17,5 +17,6 @@ namespace Dados.DTO
         public string Quantidade { get; set; } = "";
         public int Unidade { get; set; }
         public string Imagem { get; set; } = "";
+        public DateTime DataAtualizacao { get; set; }
     }
 }

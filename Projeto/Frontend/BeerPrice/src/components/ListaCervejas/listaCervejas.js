@@ -14,7 +14,6 @@ function ListaCervejas({ data, navigatePage}) {
       />
       <Title numberOfLines={1}>{data.titulo}</Title>
       <Title>{data.quantidade} Unidade: {data.unidade}</Title>
-      <Title>Id: {data.id}</Title>
     </Container>
   );
 }

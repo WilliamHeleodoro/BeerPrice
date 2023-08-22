@@ -20,13 +20,13 @@ namespace WebScraping.Driver
 
         string[] marcasCerveja = { @"Skol", "Heineken", "Amstel", "Dalla", "Devassa", "Budweiser", "Brahma", "Original", "Antarctica",
                                     "Patagonia", "Bohemia", "Eisenbahn", "Corona","Stella", "Big John", "Coronita"
-                                    , "Sol", "Estrella", "Weiss", "Itaipava", "Becks", "Petra", "Kaiser", 
+                                    , "Sol", "Estrella", "Itaipava", "Spaten", "Becks", "Petra", "Kaiser", 
                                     "LassBerg", "Kilsen", "Cristal", "Baly", "BellaVista", "Cabare" };
 
         string[] tipoCerveja = { @"Ipa", "Pale Ale", "Beats" };
 
         string[] caracteristicas = { @"Unfiltered", "Duplo Malte Escura", "Duplo Malte", "Zero", "Sem Alcool", "Malzbier", 
-                                    "Sem Glúten", "Extra", "Puro Malte" };
+                                    "Sem Glúten", "Extra", "Puro Malte", "Amber", "Weisse" };
 
         string[] produtos = { @"Cerveja", "Chopp" };
         public void BuscarBrasaoeMoura(string link, string mercado)
@@ -84,7 +84,19 @@ namespace WebScraping.Driver
             foreach(var element in elements)
             {
                 var item = new Item();
+
+                //EXCESSOES
+                string nome = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                
+                if (nome.ToLower().Contains("chopp"))
+                    continue;
+
+                if (nome.ToLower().Contains("liverpool"))
+                    continue;
+
+                //MERCADO
                 item.Mercado = mercado;
+
                 //AJUSTAR PREÇO
                 Match preco = montarPreco.Match(element.FindElement(By.ClassName("area-preco")).Text);
                 item.Preco = Convert.ToDecimal(preco.Value);
@@ -162,7 +174,7 @@ namespace WebScraping.Driver
                     {
                         if (caracter == "Zero" || caracter == "Sem Alcool")
                             item.Caracteristica = "Zero";
-                        else if (caracter == "Puro Malte" && item.Marca != "Skol")
+                        else if (caracter == "Puro Malte" && (item.Marca != "Skol" && item.Marca != "Itaipava"))
                             item.Caracteristica = "";
                         else
                             item.Caracteristica = caracter;
@@ -249,6 +261,14 @@ namespace WebScraping.Driver
             foreach (var element in elements)
             {
                 var item = new Item();
+
+                //EXCESSOES
+                string nome = element.FindElement(By.ClassName("info-text")).Text;
+
+                if (nome.ToLower().Contains("chopp"))
+                    continue;
+
+                //MERCADO
                 item.Mercado = mercado;
                 
                 //AJUSTAR PREÇO
@@ -327,7 +347,7 @@ namespace WebScraping.Driver
                     {
                         if (caracter == "Zero" || caracter == "Sem Alcool")
                             item.Caracteristica = "Zero";
-                        else if (caracter == "Puro Malte" && item.Marca != "Skol")
+                        else if (caracter == "Puro Malte" && (item.Marca != "Skol" && item.Marca != "Itaipava"))
                             item.Caracteristica = "";
                         else
                             item.Caracteristica = caracter;

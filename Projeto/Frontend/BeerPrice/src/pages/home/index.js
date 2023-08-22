@@ -72,7 +72,7 @@ function Home() {
 
       <SearchContainer>
         <Input
-          placeholder="Marca da Cerveja"
+          placeholder="Busque por Marca, Tipo..."
           placeholderTextColor="#fff"
           value={resultadoFiltro}
           onChangeText={setResultadoFiltro}

@@ -18,7 +18,7 @@ namespace Dados.Repositorios
 
         public List<CervejaPorCodigoDTO> BuscarCervejaPorCodigo(long codigoCerveja)
         {
-            var sql = @"SELECT TITULO, IMAGEM, QUANTIDADE, UNIDADE FROM ITEM
+            var sql = @"SELECT TITULO, IMAGEM, QUANTIDADE, UNIDADE, TO_CHAR(DATAATUALIZACAO, 'DD/MM/YYYY') AS DATAATUALIZACAO FROM ITEM
                          WHERE ID = @codigoCerveja";
 
 
