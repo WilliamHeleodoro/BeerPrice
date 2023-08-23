@@ -18,7 +18,7 @@ namespace Dados.Controller
 
             if (resultado == null || resultado.Count == 0)
             {
-                return BadRequest("Produto não existe"); // Retorna HTTP 400 - Bad Request
+                return BadRequest("Item não encontrado!"); // Retorna HTTP 400 - Bad Request
             }
 
             return Ok(resultado);
@@ -32,7 +32,7 @@ namespace Dados.Controller
 
             if (resultado.Titulo == "")
             {
-                return BadRequest("Produto não existe"); // Retorna HTTP 400 - Bad Request
+                return BadRequest("Item não encontrado!"); // Retorna HTTP 400 - Bad Request
             }
 
             return Ok(resultado);
@@ -48,7 +48,7 @@ namespace Dados.Controller
 
             if (resultado == null)
             {
-                return BadRequest("Produto não existe"); // Retorna HTTP 400 - Bad Request
+                return BadRequest("Item não encontrado!"); // Retorna HTTP 400 - Bad Request
             }
 
             return Ok(resultado);
