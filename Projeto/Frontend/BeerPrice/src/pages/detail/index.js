@@ -88,10 +88,12 @@ function Detail() {
         })
         .catch((err) => {
           console.error(
-            "ops! ocorreu um erro : " + err + " " + err.response.data
+            "ops! ocorreu um erro: " + err + " " + err.response.data
           );
+        })
+        .finally(() => {
+          setLoading(false); // Move this inside the .finally block
         });
-      setLoading(false);
     }
   }, [nomeDoMercadoSelecionado]);
 
@@ -110,16 +112,16 @@ function Detail() {
         </HeaderButton>
         <Title>Cerveja</Title>
         <ContainerAtualizacao>
-        <Feather
-          name="clock"
-          size={14}
-          color={"#a9a9a9"}
-          style={{ marginRight: 5 }}
-        />
-        <Atualizado>{itemCerveja.dataAtualizacao}</Atualizado>
-      </ContainerAtualizacao>
+          <Feather
+            name="clock"
+            size={14}
+            color={"#a9a9a9"}
+            style={{ marginRight: 5 }}
+          />
+          <Atualizado>{itemCerveja.dataAtualizacao}</Atualizado>
+        </ContainerAtualizacao>
       </Header>
-      
+
       <View>
         <Banner resizeMethod="resize" source={{ uri: itemCerveja.imagem }} />
         <Precos
