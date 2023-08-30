@@ -2,6 +2,10 @@
   "expo": {
     "name": "BeerPrice",
     "slug": "BeerPrice",
+    "plataforms": [
+      "android",
+      "ios"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,9 +19,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "buildNumber": "1",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.williamheleodoro.beerprice"
     },
     "android": {
+      "versionCode": 2,
+      "package": "com.williamheleodoro.beerprice",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000000"
@@ -25,6 +33,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cc8f5dc6-d759-4a35-9c2f-4af286239616"
+      }
     }
   }
 }

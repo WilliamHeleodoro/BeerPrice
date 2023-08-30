@@ -76,25 +76,20 @@ function Detail() {
   const [nomeDoMercadoSelecionado, setNomeDoMercadoSelecionado] = useState("");
 
   useEffect(() => {
-    setNomeDoMercadoSelecionado(nomeMercado);
-  });
+    if (nomeMercado) setNomeDoMercadoSelecionado(nomeMercado);
+  }, [nomeMercado]);
 
   useEffect(() => {
-    if (nomeDoMercadoSelecionado !== "") {
+    if (nomeDoMercadoSelecionado)
       getHistoricoPreco(route.params?.id, nomeDoMercadoSelecionado)
         .then((response) => {
           setHistoricoPreco(response.data);
-          setLoading(false);
         })
         .catch((err) => {
           console.error(
             "ops! ocorreu um erro: " + err + " " + err.response.data
           );
-        })
-        .finally(() => {
-          setLoading(false); // Move this inside the .finally block
         });
-    }
   }, [nomeDoMercadoSelecionado]);
 
   if (loading) {
@@ -115,7 +110,7 @@ function Detail() {
           <Feather
             name="clock"
             size={14}
-            color={"#a9a9a9"}
+            color={"#C0C0C0"}
             style={{ marginRight: 5 }}
           />
           <Atualizado>{itemCerveja.dataAtualizacao}</Atualizado>
@@ -172,7 +167,7 @@ function Detail() {
         <LineChart
           style={{ flex: 2 }}
           data={historicoPreco.map((item) => item.preco)}
-          svg={{ stroke: "rgb(134, 65, 244)", strokeWidth: 1.8 }}
+          svg={{ stroke: "rgb(176,224,230)", strokeWidth: 1.8 }}
           contentInset={{ top: 40, bottom: 40, right: 30, left: 30 }}
           curve={shape.curveMonotoneX}
         >

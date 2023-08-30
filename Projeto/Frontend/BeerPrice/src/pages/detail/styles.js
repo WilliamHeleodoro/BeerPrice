@@ -3,7 +3,7 @@ import fonts from "../../styles/fonts";
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #191a30;
+  background-color: #000000;
 `;
 
 export const Title = styled.Text`
@@ -38,7 +38,7 @@ export const ContainerAtualizacao = styled.View`
 
 export const Atualizado = styled.Text`
   font-size: 11px;
-  color: #a9a9a9;
+  color: #C0C0C0;
   
 `;
 
