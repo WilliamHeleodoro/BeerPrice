@@ -168,6 +168,7 @@ namespace WebScraping.Driver
                 //AJUSTAR CARACTERISTICA
                 string tituloCerveja = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
 
+                tituloCerveja = tituloCerveja.Replace('Á','A');
                 foreach (var caracter in caracteristicas)
                 {
                     if (tituloCerveja.ToLower().Normalize(NormalizationForm.FormD).Contains(caracter.ToLower().Normalize(NormalizationForm.FormD)))
@@ -340,6 +341,8 @@ namespace WebScraping.Driver
 
                 //AJUSTAR CARACTERISTICA
                 string tituloCerveja = element.FindElement(By.ClassName("description")).Text;
+
+                tituloCerveja = tituloCerveja.Replace('Á', 'A');
 
                 foreach (var caracter in caracteristicas)
                 {
