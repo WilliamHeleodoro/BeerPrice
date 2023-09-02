@@ -1,14 +1,5 @@
-﻿using com.sun.crypto.provider;
-using Dados.DTO;
-using Dados.Filtros;
+﻿using Dados.DTO;
 using Dapper;
-using org.omg.Dynamic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebScraping.Model;
 
 namespace Dados.Repositorios
 {
@@ -18,8 +9,17 @@ namespace Dados.Repositorios
 
         public List<CervejaPorCodigoDTO> BuscarCervejaPorCodigo(long codigoCerveja)
         {
-            var sql = @"SELECT TITULO, IMAGEM, QUANTIDADE, UNIDADE, TO_CHAR(DATAATUALIZACAO, 'DD/MM/YYYY') AS DATAATUALIZACAO FROM ITEM
-                         WHERE ID = @codigoCerveja";
+            var sql = @"SELECT 
+                            TITULO, 
+                            CASE WHEN (SELECT IMAGEM FROM ITEM AS IMAGEM WHERE IMAGEM.ID = ITEM.ID AND IMAGEM.IMAGEM like '%.png%') IS NOT NULL THEN 
+                            	(SELECT IMAGEM FROM ITEM AS IMAGEM WHERE IMAGEM.ID = ITEM.ID AND IMAGEM.IMAGEM like '%.png%')
+                            ELSE ITEM.IMAGEM
+                            END AS IMAGEM,
+                            QUANTIDADE, 
+                            UNIDADE, 
+                            TO_CHAR(DATAATUALIZACAO, 'DD/MM/YYYY') AS DATAATUALIZACAO 
+                            FROM ITEM
+                            WHERE ID = @codigoCerveja";
 
 
             var parametros = new Dictionary<string, object> { { "@codigoCerveja", codigoCerveja } };

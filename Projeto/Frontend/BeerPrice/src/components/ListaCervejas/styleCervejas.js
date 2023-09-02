@@ -15,6 +15,7 @@ export const BannerItem = styled.Image`
     width: 160px;
     height: 160px;
     border-radius: 8px;
+
 `;
 
 export const Title = styled.Text`

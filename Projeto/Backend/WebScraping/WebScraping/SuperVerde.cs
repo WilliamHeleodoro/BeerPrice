@@ -156,6 +156,9 @@ namespace WebScraping.WebScraping
                 tituloCerveja = tituloCerveja.Replace('Á', 'A');
                 tituloCerveja = tituloCerveja.Replace("Gluten", "Glúten");
 
+                if (tituloCerveja.ToLower().Contains("corona") || tituloCerveja.ToLower().Contains("coronita"))
+                    item.Caracteristica = "Extra";
+
                 foreach (var caracter in webScraper.caracteristicas)
                 {
                     if (tituloCerveja.ToLower().Normalize(NormalizationForm.FormD).Contains(caracter.ToLower().Normalize(NormalizationForm.FormD)))
