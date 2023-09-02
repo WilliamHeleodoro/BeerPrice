@@ -101,6 +101,9 @@ namespace WebScraping.WebScraping
                 else
                     item.Unidade = Convert.ToInt32(unidades.Value);
 
+                if (item.Unidade == 1 && item.Preco > 30 && item.Quantidade != "5L")
+                    continue;
+
                 //AJUSTAR IMAGEM
 
                 var imgElement = element.FindElement(By.ClassName("img-container--product"));
@@ -138,6 +141,7 @@ namespace WebScraping.WebScraping
                 string tituloCerveja = element.FindElement(By.ClassName("description")).Text;
 
                 tituloCerveja = tituloCerveja.Replace('Á', 'A');
+                tituloCerveja = tituloCerveja.Replace("Gluten", "Glúten");
 
                 foreach (var caracter in webScraper.caracteristicas)
                 {
@@ -147,6 +151,8 @@ namespace WebScraping.WebScraping
                             item.Caracteristica = "Zero";
                         else if (caracter == "Puro Malte" && (item.Marca != "Skol" && item.Marca != "Itaipava"))
                             item.Caracteristica = "";
+                        else if (caracter == "Glúten")
+                            item.Caracteristica = "Sem " + caracter;
                         else
                             item.Caracteristica = caracter;
 
@@ -178,7 +184,7 @@ namespace WebScraping.WebScraping
                     }
                 }
 
-                if (item.Marca != "" && item.Tipo != "Beats" && item.Quantidade != "")
+                if (item.Marca != "" && item.Tipo != "Beats" && item.Quantidade != "" && item.Unidade == 1 && (!item.Titulo.Contains("Chopp")))
                     webScraper.items.Add(item);
 
             }

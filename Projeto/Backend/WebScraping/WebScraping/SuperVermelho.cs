@@ -72,10 +72,7 @@ namespace WebScraping.WebScraping
                 var item = new Item();
 
                 //EXCESSOES
-                string nome = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
-
-                if (nome.ToLower().Contains("chopp"))
-                    continue;
+                string nome = element.FindElement(By.ClassName("nome")).Text;
 
                 if (nome.ToLower().Contains("liverpool"))
                     continue;
@@ -84,11 +81,13 @@ namespace WebScraping.WebScraping
                 item.Mercado = mercado;
 
                 //AJUSTAR PREÇO
-                Match preco = webScraper.montarPreco.Match(element.FindElement(By.ClassName("area-preco")).Text);
+                var buscarPreco = element.FindElement(By.ClassName("valor-produto-peso"));
+                Match preco = webScraper.montarPreco.Match(buscarPreco.GetAttribute("value"));
+                //Match preco = webScraper.montarPreco.Match(element.FindElement(By.ClassName("area-preco")).Text);
                 item.Preco = Convert.ToDecimal(preco.Value);
 
                 //AJUSTAR QUANTIDADE
-                var buscarString = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                var buscarString = element.FindElement(By.ClassName("nome")).Text;
                 buscarString = buscarString.Replace(" Ml", "Ml");
                 buscarString = buscarString.Replace("Litros", "L");
                 buscarString = buscarString.Replace(" L", "L");
@@ -97,33 +96,24 @@ namespace WebScraping.WebScraping
                 item.Quantidade = Convert.ToString(quantidade.Value).ToUpper();
 
                 //AJUSTAR UNIDADE
-                Match unidade = webScraper.montarUnidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
+                Match unidade = webScraper.montarUnidade.Match(element.FindElement(By.ClassName("nome")).Text);
                 Match unidades = webScraper.montarUnidades.Match(unidade.Value);
 
                 if (unidades.Value == "")
-                {
-                    Match unidade2 = webScraper.montarUnidade.Match(element.FindElement(By.ClassName("badge-mob")).Text);
-                    if (Convert.ToString(unidade2) != "")
-                    {
-                        Match unidades2 = webScraper.montarUnidades.Match(unidade2.Value);
-                        item.Unidade = Convert.ToInt32(unidades2.Value);
-                    }
-                    else
-                        item.Unidade = 1;
-                }
+                    item.Unidade = 1;
 
                 else
                     item.Unidade = Convert.ToInt32(unidades.Value);
 
-                if (item.Unidade == 1 && item.Preco > 20 && (item.Quantidade == "350ML" || item.Quantidade == "300ML"))
+                if (item.Unidade == 1 && item.Preco > 30 && item.Quantidade != "5L")
                     continue;
 
                 //AJUSTAR IMAGEM
-                var imgElement = element.FindElement(By.ClassName("img-fluid"));
+                var imgElement = element.FindElement(By.ClassName("owl-lazy"));
                 item.Imagem = imgElement.GetAttribute("src");
 
                 //AJUSTAR TIPO
-                string tipo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                string tipo = element.FindElement(By.ClassName("nome")).Text;
 
                 foreach (var tipos in webScraper.tipoCerveja)
                 {
@@ -137,7 +127,7 @@ namespace WebScraping.WebScraping
                 }
 
                 //AJUSTAR MARCA
-                string marca = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                string marca = element.FindElement(By.ClassName("nome")).Text;
 
                 marca = marca.Replace("'", "");
 
@@ -152,17 +142,21 @@ namespace WebScraping.WebScraping
                 }
 
                 //AJUSTAR CARACTERISTICA
-                string tituloCerveja = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                string tituloCerveja = element.FindElement(By.ClassName("nome")).Text;
 
                 tituloCerveja = tituloCerveja.Replace('Á', 'A');
+                tituloCerveja = tituloCerveja.Replace("Gluten", "Glúten");
+
                 foreach (var caracter in webScraper.caracteristicas)
                 {
                     if (tituloCerveja.ToLower().Normalize(NormalizationForm.FormD).Contains(caracter.ToLower().Normalize(NormalizationForm.FormD)))
                     {
-                        if (caracter == "Zero" || caracter == "Sem Alcool")
+                        if (caracter == "Zero" || caracter == "Sem Alcool" || caracter == "Sem Gluten")
                             item.Caracteristica = "Zero";
                         else if (caracter == "Puro Malte" && (item.Marca != "Skol" && item.Marca != "Itaipava"))
                             item.Caracteristica = "";
+                        else if (caracter == "Glúten")
+                            item.Caracteristica = "Sem " + caracter;
                         else
                             item.Caracteristica = caracter;
 
@@ -172,14 +166,14 @@ namespace WebScraping.WebScraping
                 }
 
                 //ECOMMERCE
-                var ecommerce = element.FindElement(By.ClassName("list-product-link"));
+                var ecommerce = element.FindElement(By.ClassName("link-nome-produto"));
                 item.Ecommerce = ecommerce.GetAttribute("href");
 
                 //DATA ATUALIZAÇÃO
                 item.DataAtualizacao = DateTime.Now;
 
                 //TITULO
-                var titulo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                var titulo = element.FindElement(By.ClassName("nome")).Text;
 
                 foreach (var produto in webScraper.produtos)
                 {
@@ -194,7 +188,7 @@ namespace WebScraping.WebScraping
                     }
                 }
 
-                if (item.Marca != "" && item.Quantidade != "")
+                if (item.Marca != "" && item.Tipo != "Beats" && item.Quantidade != "" && item.Unidade == 1 && (!item.Titulo.Contains("Chopp")))
                     webScraper.items.Add(item);
             }
 
