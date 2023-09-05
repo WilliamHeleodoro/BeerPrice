@@ -6,15 +6,20 @@ using System.Text.RegularExpressions;
 using System.Text;
 using WebScraping.Model;
 using WebScraping.Driver;
+using sun.rmi.runtime;
+using WebScraping.Repositorio;
+using static sun.awt.geom.AreaOp;
 
 namespace WebScraping.WebScraping
 {
     public class SuperVerde : Web
     {
         RepositorioWebScraping webScraper = new RepositorioWebScraping();
-        
+
+        RepositorioLogAuditoria auditoria = new RepositorioLogAuditoria();
         public void BuscarMoura(string link, string mercado)
         {
+            webScraper.items.Clear();
 
             if (driver == null)
                 StartBrowser(TypeDriver.GoogleChorme, null);
@@ -46,16 +51,16 @@ namespace WebScraping.WebScraping
                         elements = GetValue(TypeElement.Xpath, "/html/body/app-root/app-sm-master-page/main/section/app-departments/app-list-departments-products-category/app-grid-product-body/div/div")
                                .element.FindElements(By.ClassName("list-product-item"));
 
-
+                        auditoria.Log("Elementos encontrados com sucesso, Moura");
                         break;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message + "Brasão");
+                        auditoria.Log("Erro: " + ex.Message + "Moura: " + link);
                     }
                 }
                 else
-                    Console.WriteLine("Não conseguiu buscar os dados do Brasão contador " + i);
+                    auditoria.Log("Erro: Não conseguiu buscar os dados do Moura contador " + i);
 
 
 

@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using WebScraping.Driver;
 using WebScraping.Model;
+using WebScraping.Repositorio;
 
 namespace WebScraping.WebScraping
 {
@@ -11,8 +12,12 @@ namespace WebScraping.WebScraping
     {
         RepositorioWebScraping webScraper = new RepositorioWebScraping();
 
+        RepositorioLogAuditoria auditoria = new RepositorioLogAuditoria();
+
         public void BuscarCeleiro(string link, string mercado)
         {
+            webScraper.items.Clear();
+
             if (driver == null)
                 StartBrowser();
 
@@ -39,19 +44,19 @@ namespace WebScraping.WebScraping
                         elements = GetValue(TypeElement.Xpath, "/html/body/app-root/app-produtos")
                             .element.FindElements(By.ClassName("produto-disponivel"));
 
+                        auditoria.Log("Elementos encontrados com sucesso, Celeiro");
+
                         break;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message + "Celeiro");
+                        auditoria.Log("Erro: " + ex.Message + "Celeiro: " + link);
                     }
 
                 }
                 else
-                {
-                    Console.WriteLine("Não conseguiu buscar os dados do celeiro contador " + i);
+                    auditoria.Log("Erro: Não conseguiu buscar os dados do Celeiro contador " + i);
 
-                }
             }
 
             foreach (var element in elements)

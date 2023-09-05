@@ -8,14 +8,19 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WebScraping.Driver;
 using WebScraping.Model;
+using WebScraping.Repositorio;
 
 namespace WebScraping.WebScraping
 {
     public class SuperVermelho : Web
     {
         RepositorioWebScraping webScraper = new RepositorioWebScraping();
+
+        RepositorioLogAuditoria auditoria = new RepositorioLogAuditoria();
+
         public void BuscarBrasao(string link, string mercado)
         {
+            webScraper.items.Clear();
 
             if (driver == null)
                 StartBrowser(TypeDriver.GoogleChorme, null);
@@ -47,16 +52,17 @@ namespace WebScraping.WebScraping
                         elements = GetValue(TypeElement.Xpath, "/html/body/section[3]/div")
                                .element.FindElements(By.ClassName("item"));
 
+                        auditoria.Log("Elementos encontrados com sucesso, Brasão");
 
                         break;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.Message + "Brasão");
+                        auditoria.Log("Erro: " + ex.Message + "Brasão: " + link);
                     }
                 }
                 else
-                    Console.WriteLine("Não conseguiu buscar os dados do Brasão contador " + i);
+                    auditoria.Log("Erro: Não conseguiu buscar os dados do Brasão contador " + i);
 
 
 
