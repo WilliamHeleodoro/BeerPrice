@@ -68,7 +68,7 @@ function Home() {
   }
   return (
     <Container>
-      <Header title="Cátalogo de Cervejas" />
+      <Header title="Catálogo de Cervejas" />
 
       <SearchContainer>
         <Input
