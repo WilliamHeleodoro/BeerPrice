@@ -6,15 +6,14 @@ export const Container = styled.View`
   flex-direction: row;
   align-items: center;
   margin-top: 5%;
-`;
-
-export const Icone = styled.Image`
   margin-left: 3%;
 `;
+
+export const Icone = styled.Image``;
 
 export const Title = styled.Text`
   color: #fff;
   font-size: 25px;
   font-family: ${fonts.fonts.titulo};
-  margin-left: 2%;
+  margin-left: 3%;
 `;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 
 import {
@@ -17,9 +17,16 @@ import { getCervejas } from "../../services/apiCervejas";
 
 import { useNavigation } from "@react-navigation/native";
 
-import  Toast  from "react-native-toast-message";
+import Toast from "react-native-toast-message";
 
 function Home() {
+  const listaCervejasRef = useRef(null);
+  const scrollToTop = () => {
+    if (listaCervejasRef.current) {
+      listaCervejasRef.current.scrollToOffset({ offset: 0, animated: true });
+    }
+  };
+
   const [resultadoFiltro, setResultadoFiltro] = useState("");
   const [loading, setLoading] = useState(true);
   const [cervejas, setCervejas] = useState([]);
@@ -33,13 +40,12 @@ function Home() {
       .then((response) => {
         setCervejas(response.data);
       })
-      .catch((err )=> {
+      .catch((err) => {
         console.error("Ops! Ocorreu um erro:", err, err.response.data);
         Toast.show({
-          type: 'error',
-          text1: err.response.data
+          type: "error",
+          text1: err.response.data,
         });
-        
       })
       .finally(() => {
         setLoading(false);
@@ -68,7 +74,7 @@ function Home() {
   }
   return (
     <Container>
-      <Header title="Catálogo de Cervejas" />
+      <Header title="Catálogo de Cervejas" scrollToTop={scrollToTop} />
 
       <SearchContainer>
         <Input
@@ -83,6 +89,7 @@ function Home() {
       </SearchContainer>
 
       <ListaCervejas
+        ref={listaCervejasRef}
         numColumns={2}
         showsVerticalScrollIndicator={false}
         data={cervejas}
