@@ -15,9 +15,8 @@ namespace WebScraping.Driver
         public Regex montarUnidades = new Regex(@"\d+");
 
         public string[] marcasCerveja { get; } = { @"Skol", "Heineken", "Amstel", "Dalla", "Devassa", "Budweiser", "Brahma", "Original", "Antarctica",
-                                    "Patagonia", "Bohemia", "Eisenbahn", "Corona","Stella", "Big John", "Coronita"
-                                    , "Sol", "Estrella", "Itaipava", "Spaten", "Becks", "Petra", "Kaiser", 
-                                    "LassBerg", "Kilsen", "Cristal", "Baly", "BellaVista", "Cabare" };
+                                    "Patagonia", "Bohemia", "Eisenbahn", "Corona","Stella", "Coronita", "Sol", "Estrella", 
+                                    "Itaipava", "Spaten", "Becks", "Petra", "Kaiser", "Kilsen", "Cristal", "BellaVista", "Cabare" };
 
         public string[] tipoCerveja { get; }  = { @"Ipa", "Pale Ale", "Beats" };
 
