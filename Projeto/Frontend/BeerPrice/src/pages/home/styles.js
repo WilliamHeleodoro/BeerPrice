@@ -40,3 +40,10 @@ export const SearchButton = styled.TouchableOpacity`
 export const ListaCervejas = styled.FlatList`
    
 `;
+
+export const Rodape = styled.Text`
+    color:#d3d3d3;
+    text-align: center;
+    font-family: ${fonts.fonts.placeHolder};
+    font-size: 13px;
+`;

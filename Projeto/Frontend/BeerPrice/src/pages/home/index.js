@@ -7,6 +7,7 @@ import {
   Input,
   SearchButton,
   ListaCervejas,
+  Rodape
 } from "./styles";
 import { Feather } from "@expo/vector-icons";
 
@@ -18,6 +19,8 @@ import { getCervejas } from "../../services/apiCervejas";
 import { useNavigation } from "@react-navigation/native";
 
 import Toast from "react-native-toast-message";
+
+import { Linking } from "react-native";
 
 function Home() {
   const listaCervejasRef = useRef(null);
@@ -101,6 +104,11 @@ function Home() {
         )}
         keyExtractor={(item) => String(item.id)}
       />
+      <Rodape
+      onPress={() => Linking.openURL("https://forms.gle/1rx4ibq9wtVtf9mt7")} activeOpacity={2}
+      >
+        Avalie esse Aplicativo
+      </Rodape>
     </Container>
   );
 }
