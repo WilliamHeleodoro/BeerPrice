@@ -21,7 +21,7 @@ namespace WebScraping.Driver
         public string[] tipoCerveja { get; }  = { @"Ipa", "Pale Ale", "Beats" };
 
         public string[] caracteristicas { get; }  = { @"Unfiltered", "Duplo Malte Escura", "Duplo Malte", "Zero", "Sem Alcool", "Malzbier", 
-                                    "Glúten", "Extra", "Puro Malte", "Amber", "Weisse", "Weizenbier" };
+                                    "Glúten", "Extra", "Puro Malte", "Amber", "Weisse", "Weizenbier", "Session" };
 
         public string[] produtos { get; } = { @"Cerveja", "Chopp" };
 
