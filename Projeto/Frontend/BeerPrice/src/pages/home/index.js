@@ -7,7 +7,8 @@ import {
   Input,
   SearchButton,
   ListaCervejas,
-  Rodape
+  Rodape,
+  AvalieProduto,
 } from "./styles";
 import { Feather } from "@expo/vector-icons";
 
@@ -105,9 +106,10 @@ function Home() {
         keyExtractor={(item) => String(item.id)}
       />
       <Rodape
-      onPress={() => Linking.openURL("https://forms.gle/1rx4ibq9wtVtf9mt7")} activeOpacity={2}
+        onPress={() => Linking.openURL("https://forms.gle/1rx4ibq9wtVtf9mt7")}
+        activeOpacity={0.5}
       >
-        Avalie esse Aplicativo
+        <AvalieProduto>Avalie esse Aplicativo</AvalieProduto>
       </Rodape>
     </Container>
   );

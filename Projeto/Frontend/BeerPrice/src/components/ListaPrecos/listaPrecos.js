@@ -1,10 +1,9 @@
 import React from "react";
-import { View } from "react-native";
-import { Container } from "./stylePrecos";
+import { View, TouchableOpacity} from "react-native";
+import { Container, CestaMercado } from "./stylePrecos";
 import { List } from "react-native-paper";
 import fonts from "../../styles/fonts";
 import { Linking } from "react-native";
-import { Text, TouchableRipple } from "react-native-paper";
 
 function ListaPrecos({ data }) {
   return (
@@ -21,9 +20,9 @@ function ListaPrecos({ data }) {
             paddingLeft: "1%"
           }} // Defina a cor para a descrição
           left={(props) => (
-            <TouchableRipple onPress={() => Linking.openURL(data.ecommerce)} activeOpacity={2}>
+            <TouchableOpacity onPress={() => Linking.openURL(data.ecommerce)} activeOpacity={0.5}>
               <List.Icon {...props} icon="cart" color="#FFF" style={{ marginTop: 'auto', marginBottom: 'auto', paddingLeft: "15%" }} />
-            </TouchableRipple>
+            </TouchableOpacity>
           )}
           
         />
