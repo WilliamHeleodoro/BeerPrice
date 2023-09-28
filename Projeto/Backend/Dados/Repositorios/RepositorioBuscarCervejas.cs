@@ -66,6 +66,62 @@ namespace Dados.Repositorios
                              AND ATUALIZACAO.UNIDADE = ITEM.UNIDADE 
                              ORDER BY DATAATUALIZACAO DESC
                              LIMIT 1 
+                             ),
+							 
+							  (
+	                        SELECT MIN(PRECO) AS PRECO
+                             	FROM ITEM AS PRECO
+                             WHERE PRECO.MARCA = ITEM.MARCA 
+                             AND PRECO.TIPO = ITEM.TIPO 
+                             AND PRECO.CARACTERISTICA = ITEM.CARACTERISTICA 
+                             AND PRECO.QUANTIDADE = ITEM.QUANTIDADE 
+                             AND PRECO.UNIDADE = ITEM.UNIDADE
+							 AND DATE(PRECO.DATAATUALIZACAO) = 
+								   (
+	                        	SELECT DATE(DATAATUALIZACAO)
+                             		FROM ITEM AS ATUALIZACAO
+                             	WHERE ATUALIZACAO.MARCA = ITEM.MARCA 
+                             	AND ATUALIZACAO.TIPO = ITEM.TIPO 
+                             	AND ATUALIZACAO.CARACTERISTICA = ITEM.CARACTERISTICA 
+                             	AND ATUALIZACAO.QUANTIDADE = ITEM.QUANTIDADE 
+                             	AND ATUALIZACAO.UNIDADE = ITEM.UNIDADE 
+                             	ORDER BY DATAATUALIZACAO DESC
+                             	LIMIT 1 
+                             	)
+                             LIMIT 1 
+                             ),
+							  (
+	                        SELECT MERCADO
+                             	FROM ITEM AS MERCADO
+                             WHERE MERCADO.MARCA = ITEM.MARCA 
+                             AND MERCADO.TIPO = ITEM.TIPO 
+                             AND MERCADO.CARACTERISTICA = ITEM.CARACTERISTICA 
+                             AND MERCADO.QUANTIDADE = ITEM.QUANTIDADE 
+                             AND MERCADO.UNIDADE = ITEM.UNIDADE 
+							 AND MERCADO.PRECO = (
+							 	 SELECT MIN(PRECO)
+                             		FROM ITEM AS PRECO
+                             	WHERE PRECO.MARCA = ITEM.MARCA 
+                             	AND PRECO.TIPO = ITEM.TIPO 
+                             	AND PRECO.CARACTERISTICA = ITEM.CARACTERISTICA 
+                             	AND PRECO.QUANTIDADE = ITEM.QUANTIDADE 
+                             	AND PRECO.UNIDADE = ITEM.UNIDADE
+							 	AND DATE(PRECO.DATAATUALIZACAO) = 
+								   (
+	                        		SELECT DATE(DATAATUALIZACAO)
+                             			FROM ITEM AS ATUALIZACAO
+                             		WHERE ATUALIZACAO.MARCA = ITEM.MARCA 
+                             		AND ATUALIZACAO.TIPO = ITEM.TIPO 
+                             		AND ATUALIZACAO.CARACTERISTICA = ITEM.CARACTERISTICA 
+                             		AND ATUALIZACAO.QUANTIDADE = ITEM.QUANTIDADE 
+                             		AND ATUALIZACAO.UNIDADE = ITEM.UNIDADE 
+                             		ORDER BY DATAATUALIZACAO DESC
+                             		LIMIT 1 
+                             		)
+                             LIMIT 1 
+							 )
+                             ORDER BY DATAATUALIZACAO DESC
+                             LIMIT 1 
                              )
 	                        						
                              FROM ITEM

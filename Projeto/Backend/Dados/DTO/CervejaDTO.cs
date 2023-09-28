@@ -18,5 +18,7 @@ namespace Dados.DTO
         public int Unidade { get; set; }
         public string Imagem { get; set; } = "";
         public DateTime DataAtualizacao { get; set; }
+        public decimal Preco { get; set; }
+        public string Mercado { get; set; } = "";
     }
 }
