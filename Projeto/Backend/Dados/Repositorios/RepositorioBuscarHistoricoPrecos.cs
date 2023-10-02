@@ -15,11 +15,14 @@ namespace Dados.Repositorios
 
         public List<CervejaHistoricoPrecoDTO> BuscarHistoricoPreco(long codigoCerveja, FiltroObterHistorico filtros)
         {
-            var sql = @"WITH ITEM_QUERY AS (
+            var sql = @"SELECT * FROM (
+	WITH ITEM_QUERY AS (
                           SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE, DATAATUALIZACAO
                           FROM ITEM
                           WHERE ITEM.ID = @codigoCerveja
+						 
                         )
+					
                         SELECT 
                             MERCADO, PRECO, DATAATUALIZACAO
                         FROM (
@@ -31,7 +34,10 @@ namespace Dados.Repositorios
                                 WHERE (  ITENS.TIPO, ITENS.MARCA, ITENS.CARACTERISTICA, ITENS.QUANTIDADE, ITENS.UNIDADE)
                                     = (SELECT TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE FROM ITEM_QUERY)
 							
+				
+							
                         ) AS COMBINED_RESULTS
+			
 						WHERE 1=1";
 
 
@@ -44,7 +50,7 @@ namespace Dados.Repositorios
                 parametros.Add("filtroMercado", filtros.filtroMercado);
            }
 
-            sql += " ORDER BY DATAATUALIZACAO";
+            sql += " ORDER BY DATAATUALIZACAO DESC LIMIT 15 ) AS CONSULTA ORDER BY DATAATUALIZACAO ASC";
 
 
             var cervejas = conexao.ConexaoPostgres().Query<CervejaHistoricoPrecoDTO>(sql, parametros).ToList();

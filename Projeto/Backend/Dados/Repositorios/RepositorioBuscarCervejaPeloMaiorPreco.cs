@@ -41,12 +41,7 @@ namespace Dados.Repositorios
                         SELECT 
                             MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE,
                             PRECO, ECOMMERCE, DATAATUALIZACAO
-                        FROM (
-                            SELECT 
-                                MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE,
-                                PRECO, ECOMMERCE, DATAATUALIZACAO,
-                                ROW_NUMBER() OVER (PARTITION BY MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, ECOMMERCE ORDER BY DATAATUALIZACAO DESC) AS RN
-                            FROM (
+                        FROM(
                                 SELECT MERCADO, TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE, PRECO, ECOMMERCE, DATAATUALIZACAO
                                 FROM ITEM_QUERY
                                 UNION
@@ -54,10 +49,21 @@ namespace Dados.Repositorios
                                 FROM ITEM ITENS 
                                 WHERE (ITENS.TIPO, ITENS.MARCA, ITENS.CARACTERISTICA, ITENS.QUANTIDADE, ITENS.UNIDADE)
                                     IN (SELECT TIPO, MARCA, CARACTERISTICA, QUANTIDADE, UNIDADE FROM ITEM_QUERY)
+									AND DATE(ITENS.DATAATUALIZACAO) = 
+										(
+											SELECT DATE(DATAATUALIZACAO)
+                             					FROM ITEM AS ATUALIZACAO
+											WHERE ATUALIZACAO.MARCA = ITENS.MARCA 
+                             				AND ATUALIZACAO.TIPO = ITENS.TIPO 
+                             				AND ATUALIZACAO.CARACTERISTICA = ITENS.CARACTERISTICA 
+                             				AND ATUALIZACAO.QUANTIDADE = ITENS.QUANTIDADE 
+                             				AND ATUALIZACAO.UNIDADE = ITENS.UNIDADE 
+                             				ORDER BY DATAATUALIZACAO DESC
+                             				LIMIT 1 
+										)
                             ) AS COMBINED_RESULTS
-                        ) AS NUMBERED_RESULTS
-                        WHERE RN = 1
-                        ORDER BY PRECO;";
+               
+                        ORDER BY PRECO";
 
 
             var parametros = new Dictionary<string, object> { { "@codigoCerveja", codigoCerveja } };
