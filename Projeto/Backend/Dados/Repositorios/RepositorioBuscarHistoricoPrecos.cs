@@ -50,7 +50,7 @@ namespace Dados.Repositorios
                 parametros.Add("filtroMercado", filtros.filtroMercado);
            }
 
-            sql += " ORDER BY DATAATUALIZACAO DESC LIMIT 15 ) AS CONSULTA ORDER BY DATAATUALIZACAO ASC";
+            sql += " ORDER BY DATAATUALIZACAO DESC LIMIT 8 ) AS CONSULTA ORDER BY DATAATUALIZACAO ASC";
 
 
             var cervejas = conexao.ConexaoPostgres().Query<CervejaHistoricoPrecoDTO>(sql, parametros).ToList();
