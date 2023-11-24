@@ -28,7 +28,6 @@ namespace WebScraping.Driver
 
 
         
-
         public void inserirItem()
         {     
             RepositorioInserirWebScraping repositorio = new RepositorioInserirWebScraping();
