@@ -46,8 +46,9 @@ void ConfigureServices(WebApplicationBuilder builder)
         options.AddPolicy("AllowSpecificOrigin",
             builder =>
             {
-                builder.WithOrigins("https://beerprice.azurewebsites.net/") // Substitua pela origem do seu aplicativo React Native
-                       .AllowAnyOrigin();
+                //builder.WithOrigins("https://beerprice.azurewebsites.net/") // Substitua pela origem do seu aplicativo React Native
+                builder.WithOrigins("http://192.168.2.77:3000")
+                .AllowAnyOrigin();
             });
     });
 

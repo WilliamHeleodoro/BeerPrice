@@ -1,4 +1,5 @@
 ﻿using Dados.DTO;
+using Dados.Entidades;
 using Dados.Filtros;
 using Dados.Repositorios;
 using WebScraping.Model;
@@ -15,9 +16,9 @@ namespace Dados.Servicos
         {
             _repositorioBuscarCervejas = repositorioBuscarCervejas;
         }
-        public List<CervejaDTO> BuscarCervejas(FiltroObterCerveja filtroObterCerveja)
+        public PaginacaoResponse<CervejaDTO> BuscarCervejas(PaginacaoDTO paginacao)
         {
-            return _repositorioBuscarCervejas.BuscarCatalogoCervejas(filtroObterCerveja);
+            return _repositorioBuscarCervejas.BuscarCatalogoCervejas(paginacao);
         }
     }
 }

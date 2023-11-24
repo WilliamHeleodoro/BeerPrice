@@ -1,4 +1,5 @@
-﻿using Dados.Filtros;
+﻿using Dados.Entidades;
+using Dados.Filtros;
 using Dados.Servicos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,16 +11,11 @@ namespace Dados.Controller
     public class CervejaController : ControllerBase
     {
         [HttpGet]
-        public ActionResult BuscarListaCervejas([FromServices] ServicoBuscarCervejas servicoBuscarCervejas,
-            [FromQuery] FiltroObterCerveja filtroObterCerveja
+        public ActionResult BuscarListaCervejasPaginado([FromServices] ServicoBuscarCervejas servicoBuscarCervejas,
+            [FromQuery] PaginacaoDTO paginacao
             )
         {
-            var resultado = servicoBuscarCervejas.BuscarCervejas(filtroObterCerveja);
-
-            if (resultado == null || resultado.Count == 0)
-            {
-                return BadRequest("Item não encontrado!"); // Retorna HTTP 400 - Bad Request
-            }
+            var resultado = servicoBuscarCervejas.BuscarCervejas(paginacao);
 
             return Ok(resultado);
         }

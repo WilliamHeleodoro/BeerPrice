@@ -1,6 +1,3 @@
-import React, { useRef, useState, useEffect } from "react";
-import { ActivityIndicator } from "react-native";
-
 import {
   Container,
   SearchContainer,
@@ -10,39 +7,63 @@ import {
   Rodape,
   AvalieProduto,
 } from "./styles";
+import React, { useRef, useState, useEffect } from "react";
+import { ActivityIndicator, Text } from "react-native";
 import { Feather } from "@expo/vector-icons";
-
+import { Linking, View } from "react-native";
 import Header from "../../components/Header";
 import Cervejas from "../../components/ListaCervejas/listaCervejas";
-
-import { getCervejas } from "../../services/apiCervejas";
-
+import { getCervejasPaginado } from "../../services/apiCervejas";
 import { useNavigation } from "@react-navigation/native";
-
 import Toast from "react-native-toast-message";
 
-import { Linking } from "react-native";
-
 function Home() {
+  const [pesquisa, setPesquisa] = useState("");
+  const [naoTemPaginacao, setNaoTemPaginacao] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [cervejas, setCervejas] = useState([]);
+  const [pagina, setPagina] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshingPaginacao, setRefreshingPaginacao] = useState(false);
   const listaCervejasRef = useRef(null);
+
   const scrollToTop = () => {
     if (listaCervejasRef.current) {
       listaCervejasRef.current.scrollToOffset({ offset: 0, animated: true });
     }
   };
 
-  const [resultadoFiltro, setResultadoFiltro] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [cervejas, setCervejas] = useState([]);
+  const linhas = 20;
 
   const navigation = useNavigation();
 
-  const fetchCervejas = (filtro) => {
-    setLoading(true);
+  const fetchCervejas = (newPage = 1) => {
+    // if(!ehpaginacao)
+    //   setLoading(true);
 
-    getCervejas({ filtroGeral: filtro })
+    //setLoading(true);
+
+    getCervejasPaginado({
+      pagina: newPage,
+      linhas: linhas,
+      pesquisa: pesquisa.trim(),
+    })
       .then((response) => {
-        setCervejas(response.data);
+        const paginacaoResponse = response.data;
+
+        // VALIDA SE TEM MAIS ITENS
+
+        if (paginacaoResponse.dados.length < linhas) {
+          setNaoTemPaginacao(true);
+        } else {
+          setPagina(newPage + 1);
+        }
+
+        setCervejas((prevCervejas) =>
+          newPage === 1
+            ? paginacaoResponse.dados
+            : [...prevCervejas, ...paginacaoResponse.dados]
+        );
       })
       .catch((err) => {
         console.error("Ops! Ocorreu um erro:", err, err.response.data);
@@ -53,16 +74,18 @@ function Home() {
       })
       .finally(() => {
         setLoading(false);
+        setRefreshingPaginacao(false);
       });
+    console.log(pagina, linhas, pesquisa);
   };
 
   const handleSearchButtonPress = () => {
-    fetchCervejas(resultadoFiltro.trim());
+    fetchCervejas();
   };
 
   // Chamada inicial quando a página é carregada
   useEffect(() => {
-    fetchCervejas(resultadoFiltro.trim());
+    fetchCervejas();
   }, []);
 
   function navigateDetailsPage(item) {
@@ -84,8 +107,8 @@ function Home() {
         <Input
           placeholder="Busque por Marca, Tipo..."
           placeholderTextColor="#fff"
-          value={resultadoFiltro}
-          onChangeText={setResultadoFiltro}
+          value={pesquisa}
+          onChangeText={setPesquisa}
         />
         <SearchButton onPress={handleSearchButtonPress}>
           <Feather name="search" size={30} color="#FFF" />
@@ -97,6 +120,27 @@ function Home() {
         numColumns={2}
         showsVerticalScrollIndicator={false}
         data={cervejas}
+        ListFooterComponent={() =>
+          refreshingPaginacao && (
+            <View
+              style={{
+                padding: 10,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: "#FFF" }}>Carregando...</Text>
+            </View>
+          )
+        }
+        onEndReached={() => {
+          if (!naoTemPaginacao && !refreshingPaginacao) {
+            setRefreshingPaginacao(true);
+
+            fetchCervejas(pagina, true);
+          }
+        }}
+        onEndReachedThreshold={0.2}
         renderItem={({ item }) => (
           <Cervejas
             data={item}
@@ -104,10 +148,12 @@ function Home() {
           />
         )}
         keyExtractor={(item) => String(item.id)}
+        refreshing={refreshing}
+        onRefresh={() => fetchCervejas()}
       />
       <Rodape
         onPress={() => Linking.openURL("https://forms.gle/1rx4ibq9wtVtf9mt7")}
-        activeOpacity={0.5}
+        activeOpacity={0.1}
       >
         <AvalieProduto>Avalie esse Aplicativo</AvalieProduto>
       </Rodape>

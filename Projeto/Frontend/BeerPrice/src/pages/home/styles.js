@@ -4,6 +4,8 @@ import fonts from "../../styles/fonts";
 export const Container = styled.SafeAreaView`
   background-color: #000000;
   flex: 1;
+  align-items: center;
+  justify-content: center;
   padding: 4px 0;
 `;
 

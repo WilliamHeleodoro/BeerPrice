@@ -1,4 +1,5 @@
 ﻿using Dados.DTO;
+using Dados.Entidades;
 using Dados.Filtros;
 using Dapper;
 
@@ -6,10 +7,13 @@ namespace Dados.Repositorios
 {
     public class RepositorioBuscarCervejas
     {
-        
         Conexao conexao = new Conexao();
-        public List<CervejaDTO> BuscarCatalogoCervejas(FiltroObterCerveja filtros)
+
+        public PaginacaoResponse<CervejaDTO> BuscarCatalogoCervejas(PaginacaoDTO paginacao)
         {
+            long registrosPorPagina = paginacao.Linhas;
+            long offset = (paginacao.Pagina - 1) * registrosPorPagina;
+
             var sql = @"SELECT 
 	                        DISTINCT 
                             TITULO, MARCA, TIPO, CARACTERISTICA, QUANTIDADE, UNIDADE,
@@ -125,18 +129,45 @@ namespace Dados.Repositorios
                              )
 	                        						
                              FROM ITEM
-                             WHERE 1=1";
+                             WHERE 1=1"
+            ;
 
-            if (!string.IsNullOrEmpty(filtros?.filtroGeral))
+            var pesquisaTratada = "";
+            if (!string.IsNullOrEmpty(paginacao.Pesquisa))
             {
-                filtros.filtroGeral = "%" + filtros.filtroGeral + "%";
-                sql += " AND (MARCA ILIKE @filtroGeral OR CARACTERISTICA ILIKE @filtroGeral OR TIPO ILIKE @filtroGeral)";
+                pesquisaTratada = "%" + paginacao.Pesquisa + "%";
+                sql += " AND (MARCA ILIKE @PESQUISA OR CARACTERISTICA ILIKE @PESQUISA OR TIPO ILIKE @PESQUISA)";
             }
 
-            var cervejas = conexao.ConexaoPostgres().Query<CervejaDTO>(sql, filtros).ToList();
+            var sqlTotal = $"SELECT count(*) FROM({sql}) as tbl";
+            var totalLinhas = conexao.ConexaoPostgres().QueryFirst<long>(sqlTotal, new { PESQUISA = pesquisaTratada });
+
+
+            // sql += $@" ORDER BY UNIDADE, CARACTERISTICA, TIPO, DATAATUALIZACAO DESC";
+
+
+            var sql2 = @$"SELECT * FROM(
+                                        {sql}
+                        ) AS TBL 
+                LIMIT {registrosPorPagina} OFFSET {offset}";
+
+
+            var cervejas = conexao.ConexaoPostgres().Query<CervejaDTO>(sql2, new {
+                PESQUISA = pesquisaTratada
+            }).ToList();
+
             conexao.ConexaoPostgres().Close();
-            
-            return cervejas;
+
+            var paginacaoResponse = new PaginacaoResponse<CervejaDTO>() {
+                Pagina = paginacao.Pagina,
+                Linhas = paginacao.Linhas,
+                Pesquisa = paginacao.Pesquisa,
+                TotalLinhas = totalLinhas,
+                TotalPaginas = (totalLinhas / paginacao.Linhas),
+                Dados = cervejas
+            };
+
+            return paginacaoResponse;
         }
     }
 }
