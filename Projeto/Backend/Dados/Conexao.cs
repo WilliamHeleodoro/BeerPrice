@@ -12,7 +12,7 @@ namespace Dados
     public class Conexao
     {
         //private string connectionString =  "Server=localhost;Port=5432;Database=mercado;User Id=postgres;Password=postgres";
-        private string connectionString = "Server=beerpricepgsql.postgres.database.azure.com;Database=cerveja;Port=5432;User Id=postgres;Password=z@q4125!;";
+        private string connectionString = "Server=beerpricepgsql.postgres.database.azure.com;Database=cerveja;Port=5432;User Id=postgres;Password=Z@q4125!;";
 
         public NpgsqlConnection ConexaoPostgres()
         {

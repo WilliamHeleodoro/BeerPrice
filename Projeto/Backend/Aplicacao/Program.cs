@@ -47,8 +47,10 @@ void ConfigureServices(WebApplicationBuilder builder)
             builder =>
             {
                 //builder.WithOrigins("https://beerprice.azurewebsites.net/") // Substitua pela origem do seu aplicativo React Native
-                builder.WithOrigins("http://192.168.2.77:3000")
-                .AllowAnyOrigin();
+                builder.WithOrigins("http://192.168.0.109:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
             });
     });
 

@@ -33,16 +33,12 @@ function Home() {
     }
   };
 
-  const linhas = 20;
+  const linhas = 10;
 
   const navigation = useNavigation();
 
   const fetchCervejas = (newPage = 1) => {
-    // if(!ehpaginacao)
-    //   setLoading(true);
-
-    //setLoading(true);
-
+    
     getCervejasPaginado({
       pagina: newPage,
       linhas: linhas,
@@ -140,7 +136,7 @@ function Home() {
             fetchCervejas(pagina, true);
           }
         }}
-        onEndReachedThreshold={0.2}
+        onEndReachedThreshold={0.5}
         renderItem={({ item }) => (
           <Cervejas
             data={item}
