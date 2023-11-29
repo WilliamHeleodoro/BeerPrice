@@ -38,7 +38,8 @@ function Home() {
   const navigation = useNavigation();
 
   const fetchCervejas = (newPage = 1) => {
-    
+    setNaoTemPaginacao(false);
+    console.log("página", newPage);
     getCervejasPaginado({
       pagina: newPage,
       linhas: linhas,
@@ -47,6 +48,14 @@ function Home() {
       .then((response) => {
         const paginacaoResponse = response.data;
 
+        if(pesquisa.trim() != "" && paginacaoResponse.dados.length === 0)
+        {
+          Toast.show({
+            type: "info",
+            text1: "Produto não encontrado"
+          });
+        }
+
         // VALIDA SE TEM MAIS ITENS
 
         if (paginacaoResponse.dados.length < linhas) {
@@ -54,7 +63,6 @@ function Home() {
         } else {
           setPagina(newPage + 1);
         }
-
         setCervejas((prevCervejas) =>
           newPage === 1
             ? paginacaoResponse.dados
@@ -72,10 +80,10 @@ function Home() {
         setLoading(false);
         setRefreshingPaginacao(false);
       });
-    console.log(pagina, linhas, pesquisa);
   };
 
   const handleSearchButtonPress = () => {
+    setPagina(1);
     fetchCervejas();
   };
 
