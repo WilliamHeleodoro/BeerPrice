@@ -1,6 +1,7 @@
 import React from 'react';
 import { Circle,Text } from 'react-native-svg';
 
+
 export const Markers = ({ x, y, data }) => {
     return data.map((item, index) => (
         <Circle

@@ -9,8 +9,7 @@ import {
 } from "@expo-google-fonts/montserrat";
 import * as SplashScreen from "expo-splash-screen";
 
-import AppLoading from "expo-app-loading";
-import  Toast  from "react-native-toast-message";
+import Toast from "react-native-toast-message";
 
 function App() {
   const [fontsLoaded] = useFonts({

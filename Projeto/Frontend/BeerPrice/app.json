@@ -24,7 +24,7 @@
       "bundleIdentifier": "com.williamheleodoro.beerprice"
     },
     "android": {
-      "versionCode": 4,
+      "versionCode": 5,
       "package": "com.williamheleodoro.beerprice",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

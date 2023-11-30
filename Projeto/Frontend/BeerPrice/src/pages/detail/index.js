@@ -15,13 +15,9 @@ import {
 } from "./styles";
 
 import { ActivityIndicator } from "react-native";
-
 import { useNavigation, useRoute } from "@react-navigation/native";
-
 import ListaPrecos from "../../components/ListaPrecos/listaPrecos";
-
 import DetalhesCerveja from "../../components/DetalhesCerveja/detalhesCerveja";
-
 import { LineChart } from "react-native-svg-charts";
 import * as shape from "d3-shape";
 
@@ -94,7 +90,13 @@ function Detail() {
 
   if (loading) {
     return (
-      <Container>
+      <Container
+        style={{
+          padding: 10,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <ActivityIndicator size="large" color="#fff" />
       </Container>
     );

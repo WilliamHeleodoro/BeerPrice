@@ -48,11 +48,10 @@ function Home() {
       .then((response) => {
         const paginacaoResponse = response.data;
 
-        if(pesquisa.trim() != "" && paginacaoResponse.dados.length === 0)
-        {
+        if (pesquisa.trim() != "" && paginacaoResponse.dados.length === 0) {
           Toast.show({
             type: "info",
-            text1: "Produto não encontrado"
+            text1: "Produto não encontrado",
           });
         }
 
