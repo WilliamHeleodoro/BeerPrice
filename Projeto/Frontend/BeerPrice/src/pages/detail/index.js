@@ -94,7 +94,13 @@ function Detail() {
 
   if (loading) {
     return (
-      <Container>
+      <Container
+        style={{
+          padding: 10,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <ActivityIndicator size="large" color="#fff" />
       </Container>
     );
