@@ -24,7 +24,7 @@ export const Header = styled.View`
 
 export const HeaderButton = styled.TouchableOpacity`
   width: 12%;
-  background-color: rgba(25, 26, 48, 0.8);
+  background-color: #000000;
   margin-top: 0.5%;
 `;
 

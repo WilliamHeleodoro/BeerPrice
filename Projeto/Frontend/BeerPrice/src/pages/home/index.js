@@ -30,6 +30,7 @@ function Home() {
   const scrollToTop = () => {
     if (listaCervejasRef.current) {
       listaCervejasRef.current.scrollToOffset({ offset: 0, animated: true });
+
     }
   };
 
@@ -47,7 +48,7 @@ function Home() {
     })
       .then((response) => {
         const paginacaoResponse = response.data;
-
+        
         if (pesquisa.trim() != "" && paginacaoResponse.dados.length === 0) {
           Toast.show({
             type: "info",
@@ -82,7 +83,7 @@ function Home() {
   };
 
   const handleSearchButtonPress = () => {
-    setPagina(1);
+    // setPagina(1);
     fetchCervejas();
   };
 
@@ -140,7 +141,7 @@ function Home() {
           if (!naoTemPaginacao && !refreshingPaginacao) {
             setRefreshingPaginacao(true);
 
-            fetchCervejas(pagina, true);
+            fetchCervejas(pagina);
           }
         }}
         onEndReachedThreshold={0.5}
@@ -150,9 +151,8 @@ function Home() {
             navigatePage={() => navigateDetailsPage(item)}
           />
         )}
-        keyExtractor={(item) => String(item.id)}
-        refreshing={refreshing}
-        onRefresh={() => fetchCervejas()}
+        keyExtractor={(item) => (item.id)}
+
       />
       <Rodape
         onPress={() => Linking.openURL("https://forms.gle/1rx4ibq9wtVtf9mt7")}
