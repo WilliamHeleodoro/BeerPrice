@@ -1,23 +1,24 @@
 ﻿using EasyAutomationFramework;
-using java.sql;
 using OpenQA.Selenium;
-using System.Reflection.PortableExecutable;
-using System.Text.RegularExpressions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using WebScraping.Model;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using WebScraping.Driver;
-using sun.rmi.runtime;
+using WebScraping.Model;
 using WebScraping.Repositorio;
-using static sun.awt.geom.AreaOp;
 
 namespace WebScraping.WebScraping
 {
-    public class SuperVerde : Web
+    public class Brasao : Web
     {
         RepositorioWebScraping webScraper = new RepositorioWebScraping();
 
         RepositorioLogAuditoria auditoria = new RepositorioLogAuditoria();
-        public void BuscarMoura(string link, string mercado)
+
+        public void BuscarBrasao(string link, string mercado)
         {
             webScraper.items.Clear();
 
@@ -42,25 +43,26 @@ namespace WebScraping.WebScraping
             for (int i = 0; i < 3; i++)
             {
 
-                if (GetValue(TypeElement.Xpath, "/html/body/app-root/app-sm-master-page/main/section/app-departments/app-list-departments-products-category/app-grid-product-body/div/div")
-                        .element.FindElements(By.ClassName("list-product-item")).Count() > 0)
+                if (GetValue(TypeElement.Xpath, "/html/body/section[3]/div")
+                        .element.FindElements(By.ClassName("item")).Count() > 0)
                 {
                     try
                     {
 
-                        elements = GetValue(TypeElement.Xpath, "/html/body/app-root/app-sm-master-page/main/section/app-departments/app-list-departments-products-category/app-grid-product-body/div/div")
-                               .element.FindElements(By.ClassName("list-product-item"));
+                        elements = GetValue(TypeElement.Xpath, "/html/body/section[3]/div")
+                               .element.FindElements(By.ClassName("item"));
 
-                        auditoria.Log("Elementos encontrados com sucesso, Moura");
+                        auditoria.Log("Elementos encontrados com sucesso, Brasão");
+
                         break;
                     }
                     catch (Exception ex)
                     {
-                        auditoria.Log("Erro: " + ex.Message + "Moura: " + link);
+                        auditoria.Log("Erro: " + ex.Message + "Brasão: " + link);
                     }
                 }
                 else
-                    auditoria.Log("Erro: Não conseguiu buscar os dados do Moura contador " + i);
+                    auditoria.Log("Erro: Não conseguiu buscar os dados do Brasão contador " + i);
 
 
 
@@ -76,10 +78,7 @@ namespace WebScraping.WebScraping
                 var item = new Item();
 
                 //EXCESSOES
-                string nome = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
-
-                if (nome.ToLower().Contains("chopp"))
-                    continue;
+                string nome = element.FindElement(By.ClassName("nome")).Text;
 
                 if (nome.ToLower().Contains("liverpool"))
                     continue;
@@ -88,11 +87,13 @@ namespace WebScraping.WebScraping
                 item.Mercado = mercado;
 
                 //AJUSTAR PREÇO
-                Match preco = webScraper.montarPreco.Match(element.FindElement(By.ClassName("area-preco")).Text);
+                var buscarPreco = element.FindElement(By.ClassName("valor-produto-peso"));
+                Match preco = webScraper.montarPreco.Match(buscarPreco.GetAttribute("value"));
+                //Match preco = webScraper.montarPreco.Match(element.FindElement(By.ClassName("area-preco")).Text);
                 item.Preco = Convert.ToDecimal(preco.Value);
 
                 //AJUSTAR QUANTIDADE
-                var buscarString = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                var buscarString = element.FindElement(By.ClassName("nome")).Text;
                 buscarString = buscarString.Replace(" Ml", "Ml");
                 buscarString = buscarString.Replace("Litros", "L");
                 buscarString = buscarString.Replace(" L", "L");
@@ -101,20 +102,11 @@ namespace WebScraping.WebScraping
                 item.Quantidade = Convert.ToString(quantidade.Value).ToUpper();
 
                 //AJUSTAR UNIDADE
-                Match unidade = webScraper.montarUnidade.Match(element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text);
+                Match unidade = webScraper.montarUnidade.Match(element.FindElement(By.ClassName("nome")).Text);
                 Match unidades = webScraper.montarUnidades.Match(unidade.Value);
 
                 if (unidades.Value == "")
-                {
-                    Match unidade2 = webScraper.montarUnidade.Match(element.FindElement(By.ClassName("badge-mob")).Text);
-                    if (Convert.ToString(unidade2) != "")
-                    {
-                        Match unidades2 = webScraper.montarUnidades.Match(unidade2.Value);
-                        item.Unidade = Convert.ToInt32(unidades2.Value);
-                    }
-                    else
-                        item.Unidade = 1;
-                }
+                    item.Unidade = 1;
 
                 else
                     item.Unidade = Convert.ToInt32(unidades.Value);
@@ -123,11 +115,11 @@ namespace WebScraping.WebScraping
                     continue;
 
                 //AJUSTAR IMAGEM
-                var imgElement = element.FindElement(By.ClassName("img-fluid"));
+                var imgElement = element.FindElement(By.ClassName("owl-lazy"));
                 item.Imagem = imgElement.GetAttribute("src");
 
                 //AJUSTAR TIPO
-                string tipo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                string tipo = element.FindElement(By.ClassName("nome")).Text;
 
                 foreach (var tipos in webScraper.tipoCerveja)
                 {
@@ -141,7 +133,7 @@ namespace WebScraping.WebScraping
                 }
 
                 //AJUSTAR MARCA
-                string marca = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                string marca = element.FindElement(By.ClassName("nome")).Text;
 
                 marca = marca.Replace("'", "");
 
@@ -156,7 +148,7 @@ namespace WebScraping.WebScraping
                 }
 
                 //AJUSTAR CARACTERISTICA
-                string tituloCerveja = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                string tituloCerveja = element.FindElement(By.ClassName("nome")).Text;
 
                 tituloCerveja = tituloCerveja.Replace('Á', 'A');
                 tituloCerveja = tituloCerveja.Replace("Gluten", "Glúten");
@@ -168,7 +160,7 @@ namespace WebScraping.WebScraping
                 {
                     if (tituloCerveja.ToLower().Normalize(NormalizationForm.FormD).Contains(caracter.ToLower().Normalize(NormalizationForm.FormD)))
                     {
-                        if (caracter == "Zero" || caracter == "Sem Alcool")
+                        if (caracter == "Zero" || caracter == "Sem Alcool" || caracter == "Sem Gluten")
                             item.Caracteristica = "Zero";
                         else if (caracter == "Puro Malte" && (item.Marca != "Skol" && item.Marca != "Itaipava"))
                             item.Caracteristica = "";
@@ -183,14 +175,14 @@ namespace WebScraping.WebScraping
                 }
 
                 //ECOMMERCE
-                var ecommerce = element.FindElement(By.ClassName("list-product-link"));
+                var ecommerce = element.FindElement(By.ClassName("link-nome-produto"));
                 item.Ecommerce = ecommerce.GetAttribute("href");
 
                 //DATA ATUALIZAÇÃO
                 item.DataAtualizacao = DateTime.Now;
 
                 //TITULO
-                var titulo = element.FindElement(By.ClassName("txt-desc-product-itemtext-muted")).Text;
+                var titulo = element.FindElement(By.ClassName("nome")).Text;
 
                 foreach (var produto in webScraper.produtos)
                 {

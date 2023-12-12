@@ -8,7 +8,7 @@ using WebScraping.Repositorio;
 
 namespace WebScraping.WebScraping
 {
-    public class SuperRoxo : Web
+    public class Celeiro : Web
     {
         RepositorioWebScraping webScraper = new RepositorioWebScraping();
 
