@@ -25,9 +25,9 @@ export const Title = styled.Text`
 export const Detalhes = styled.View`
   width: 160px;
   background-color: ${({ data }) => {
-    if (data.mercado === "Super Vermelho") {
+    if (data.mercado === "Brasão") {
       return "#800000";
-    } else if (data.mercado === "Super Roxo") {
+    } else if (data.mercado === "Celeiro") {
       return "#701198";
     } else {
       return "#0a5c0a";

@@ -8,7 +8,7 @@ const Radio = ({
   selected,
 }) => {
   return (
-    <View style={horizontal ? styles.horizontal : styles.vertical}>
+    <View style={[horizontal ? styles.horizontal : styles.vertical, { justifyContent: 'center', alignItems: 'center' }]}>
       {options.map((opt, index) => (
         <TouchableOpacity
           key={index}
@@ -22,6 +22,7 @@ const Radio = ({
             style={{
               color: selected === index ? "#fff" : "#777",
               padding: "2%",
+              
             }}
           >
             {opt}

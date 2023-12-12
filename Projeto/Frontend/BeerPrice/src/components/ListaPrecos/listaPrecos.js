@@ -12,7 +12,7 @@ function ListaPrecos({ data }) {
         <List.Item
           title={data.mercado}
           description={`R$  ${data.preco}`}
-          titleStyle={{ color: "#FFF", fontSize: 14, paddingLeft: "1%"}} // Defina a cor para o título
+          titleStyle={{ color: "#FFF",  fontFamily: fonts.fonts.outros, fontSize: 14, paddingLeft: "1%"}} // Defina a cor para o título
           descriptionStyle={{
             color: "#fff",
             fontFamily: fonts.fonts.outros,
