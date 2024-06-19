@@ -8,10 +8,10 @@ Aplativo consistem e fazer um WEB SCRAPING para retenção dos dados de cerveja 
 ## Tecnologias
 
 - **Backend:** .NET C#, ASP.NET Core, PostgreSQL, Dapper, API RESTful, Swagger.
-- **Frontend:** React Native, Axios.
+- **Frontend:** React Native, Java Script, Axios.
 
 ## Contato
 
 - **Nome:** William Heleodoro
 - **Email:** williamheleodoro@gmail.com
-- **LinkedIn:** (www.linkedin.com/in/william-heleodoro-383b331b8)
+- **LinkedIn:** www.linkedin.com/in/william-heleodoro-383b331b8
