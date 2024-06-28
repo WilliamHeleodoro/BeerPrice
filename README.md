@@ -3,7 +3,7 @@
 ## Descrição
 
 Aplicativo móvel com backend em .NET C# e frontend em React Native, desenvolvido como projeto de conclusão de curso.
-Aplativo consistem e fazer um WEB SCRAPING para retenção dos dados de cerveja em mercados locais e comparar os preços entre os mercados para obter o melhor custo-benefício.
+Aplicativo consiste em fazer um WEB SCRAPING para retenção dos dados de cerveja em mercados locais e comparar os preços entre os mercados para obter o melhor custo-benefício.
 
 ## Tecnologias
 
